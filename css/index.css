@@ -1,0 +1,75 @@
+@import url("./charts.css");
+
+.overview {
+  grid-template-columns: 15rem 1fr 1fr 1fr;
+}
+
+.overview-container .card {
+  height: 7rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+.charts-events {
+  grid-template-columns: 1fr 15rem;
+}
+
+@media all and (min-width: 1440px) {
+  .charts-events {
+    grid-template-columns: 1fr 22rem;
+  }
+  .overview {
+    grid-template-columns: 22rem 1fr 1fr 1fr;
+  }
+}
+
+.charts {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 10rem auto;
+}
+
+.charts .financial-summary {
+  grid-column: 1 / span 2;
+  height: 20rem;
+}
+
+.difference * {
+  font-size: var(--p4);
+  font-weight: bold;
+}
+
+.difference .percentage {
+  font-weight: bold;
+  padding: 0.25rem;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  font-size: var(--p4);
+  border-radius: 2rem;
+}
+
+.difference .growth {
+  border: 1px solid #d9efd9;
+  color: #039503;
+}
+
+.difference .decline {
+  border: 1px solid #f9d9da;
+  color: #d80408;
+}
+
+.difference .growth * {
+  color: #039503;
+}
+
+.difference .decline * {
+  color: #d80408;
+}
+
+.difference .growth::before {
+  content: "+ ";
+}
+
+.difference .stale {
+  border: 1px solid var(--border);
+}

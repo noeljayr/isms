@@ -1,0 +1,43 @@
+.search {
+  width: 13rem;
+}
+
+.table-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  grid-template-columns: 1fr;
+}
+
+.table-card .card-body {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.table .tr .student-number {
+  font-size: var(--p2);
+  opacity: 0.65;
+}
+
+.table .tr .guardian-email,
+.table .tr .guardian-phone {
+  font-size: var(--p3);
+}
+
+.students-table .table-header {
+  grid-template-columns: 4rem 1fr 1fr 3rem;
+}
+
+.students-table .tr {
+  grid-template-columns: 4rem 1fr 1fr 3rem;
+}
+
+
+.guardians-table .table-header {
+  grid-template-columns: 1fr 1fr 5rem;
+}
+
+.guardians-table .tr {
+  grid-template-columns: 1fr 1fr 5rem;
+}

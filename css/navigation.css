@@ -1,0 +1,122 @@
+.links svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.submenu {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.links .link {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-s);
+}
+
+.links * {
+  font-size: var(--p2);
+}
+
+.links .link::after {
+  content: "";
+  height: 50%;
+  position: absolute;
+  width: 5px;
+  border-radius: 10px;
+  right: -2px;
+  background-color: var(--primary);
+  opacity: 0;
+}
+
+.links .active-link::after {
+  opacity: 1;
+}
+
+.active-link {
+  background-color: var(--background);
+}
+
+.links .active-link {
+  color: var(--primary);
+}
+
+.links .active-link span {
+  color: var(--primary);
+}
+
+.links .active-link svg path {
+  stroke: var(--primary);
+}
+
+.links .submenu a::before {
+  content: "•";
+  height: 1rem;
+  width: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.15;
+  font-weight: bolder;
+}
+
+.links .submenu .active-link::before {
+  opacity: 0.4;
+}
+
+
+
+.bread-crumbs svg {
+  height: 0.85rem;
+  width: 0.85rem;
+}
+
+.bread-crumbs  .icon-tabler {
+  stroke-width: 0.1rem;
+  stroke: var(--black);
+  height: 0.85rem;
+  width: 0.85rem;
+}
+
+
+.bread-crumbs svg path {
+  stroke-width: 0.085rem;
+}
+
+.bread-crumbs .seperator {
+  font-size: var(--p3);
+}
+
+.bread-crumbs * {
+  font-size: var(--p3);
+}
+
+.avatar {
+  background-color: var(--background);
+  height: 2.25rem;
+  width: 2.25rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.avatar img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.user-profile .name {
+  font-size: var(--p2);
+}
+
+.user-profile .role {
+  font-size: var(--p3);
+}

@@ -1,0 +1,83 @@
+.chart-year {
+  height: 1.85rem;
+  padding-right: 0.65rem;
+  padding-left: 0.65rem;
+  background-color: #fbfbfe;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 0;
+  border-radius: 2rem;
+}
+
+.chart-year span {
+  font-size: var(--p3);
+}
+
+.chart-year svg {
+  height: 0.75rem;
+  width: 0.75rem;
+}
+.chart-year svg path {
+  stroke-width: 3px;
+}
+.legend-stat {
+  font-size: var(--p2);
+}
+
+.legend-stat * {
+  font-size: var(--p3);
+}
+
+.legend-stat .stat {
+  padding: 0.15rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: bold;
+  border-radius: 1rem;
+}
+
+.legend .males .stat {
+  background-color: #e6e7fa;
+  border: 1px solid #babdf1;
+  color: #565ddc;
+}
+
+.legend .males .stat * {
+  color: #565ddc;
+}
+
+.legend .females .stat {
+  background-color: #fffae6;
+  border: 1px solid #ffe483;
+  color: #ffc703;
+}
+.legend .females .stat * {
+  color: #ffc703;
+}
+.legend {
+  right: 2rem;
+}
+
+.chart-container {
+  height: 7rem;
+  width: 7rem;
+}
+
+@media all and (min-width: 1440px) {
+  .legend {
+    right: 30%;
+  }
+  .chart-container {
+    height: 8rem;
+    width: 8rem;
+  }
+}
+
+
+.financial-summary .chart *{
+  font-size: var(--p2);
+  font-family: "Lexend", sans-serif;
+}
