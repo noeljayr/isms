@@ -2,11 +2,12 @@ import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
 import UploadCloud from "./svg/UploadCloud";
 import Plus from "./svg/Plus";
 import Trash from "./svg/Trash";
+import { AnimatePresence, motion } from "motion/react";
 
 interface FileDropzoneProps {
   onRemove?: () => void;
   file: File | null;
-  setFile: (file: File | null)=>void;
+  setFile: (file: File | null) => void;
 }
 
 const formatBytes = (bytes: number, decimals = 2): string => {
@@ -18,8 +19,11 @@ const formatBytes = (bytes: number, decimals = 2): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 };
 
-const FileDropzone: React.FC<FileDropzoneProps> = ({ onRemove, setFile, file }) => {
-
+const FileDropzone: React.FC<FileDropzoneProps> = ({
+  onRemove,
+  setFile,
+  file,
+}) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [invalidFile, setInvalidFile] = useState(false);
@@ -71,7 +75,6 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({ onRemove, setFile, file }) 
       e.target.value = "";
     }
   };
-
 
   // Remove file and trigger remove callback
   const handleRemove = () => {
@@ -129,24 +132,31 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({ onRemove, setFile, file }) 
           )}
         </div>
       )}
-      {file && (
-        <div className="dropzone-file-info flex p-2 items-center w-full">
-          <div className="flex flex-col gap-0.5 ">
-            <span className="font-medium">{file.name}</span>
-            <span className="file-size font-medium opacity-65">
-              {formatBytes(file.size)}
-            </span>
-          </div>
+      <AnimatePresence>
+        {file && (
+          <motion.div 
+          initial={{opacity: 0}}
+          animate={{opacity:1}}
+          exit={{opacity: 0}}
+          transition={{duration: 0.35, ease: "linear"}}
+          className="dropzone-file-info flex p-2 items-center w-full">
+            <div className="flex flex-col gap-0.5 ">
+              <span className="font-medium">{file.name}</span>
+              <span className="file-size font-medium opacity-65">
+                {formatBytes(file.size)}
+              </span>
+            </div>
 
-          <div className="dropzone-actions ml-auto flex gap-2 items-center">
-            {/* <span onClick={handleUploadClick}>Upload</span> */}
+            <div className="dropzone-actions ml-auto flex gap-2 items-center">
+              {/* <span onClick={handleUploadClick}>Upload</span> */}
 
-            <button onClick={handleRemove}>
-              <Trash />
-            </button>
-          </div>
-        </div>
-      )}
+              <button onClick={handleRemove}>
+                <Trash />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

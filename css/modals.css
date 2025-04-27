@@ -13,8 +13,6 @@
   z-index: 5;
 }
 
-
-
 .view-modal {
   transform: scale(1);
   left: 120%;
@@ -40,9 +38,7 @@
   overflow: visible !important;
 }
 
-
-
-.view-modal form .cta-container{
+.view-modal form .cta-container {
   margin-top: auto;
 }
 
@@ -241,4 +237,27 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.modal .upload-propgress {
+  grid-template-columns: 1fr auto;
+}
+
+.modal .upload-propgress * {
+  font-size: var(--p3);
+}
+
+.modal .progress-bar {
+  height: 0.35rem;
+  background-color: var(--background);
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.modal .progress-bar span{
+  height: 100%;
+  width: 2%;
+  background-color: var(--primary);
+  border-radius: 2rem;
 }

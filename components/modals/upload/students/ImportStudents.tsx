@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import XClose from "@/components/svg/XClose";
 import { useImportStudentModalStore } from "@/context/modals/addStudent";
 import FileDropzone from "@/components/FileDropzone";
+import { AnimatePresence, motion } from "motion/react";
 
 function ImportStudents() {
   const { importStudentsModalActive, setImportStudentModalActive } =
@@ -32,8 +33,26 @@ function ImportStudents() {
             </span>
           </span>
 
-          <div className="card-body flex flex-col gap-4">
+          <div className="card-body flex flex-col gap-1">
             <FileDropzone file={file} setFile={setFile} />
+
+            <AnimatePresence>
+              {file && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35, ease: "linear" }}
+                  className="upload-propgress grid gap-2 items-center"
+                >
+                  <span className="progress-bar">
+                    <span></span>
+                  </span>
+
+                  <span className="number opacity-75">0 / 20</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="cta-container flex gap-2 w-full justify-end">
               <span onClick={setImportStudentModalActive} className="cta-2">
