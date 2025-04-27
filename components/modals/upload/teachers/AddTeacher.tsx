@@ -1,28 +1,29 @@
 "use client";
 
 import React, { useState } from "react";
-import XClose from "../svg/XClose";
-import useStudentModalStore from "@/context/modals/addStudent";
+import XClose from "@/components/svg/XClose";
+import {useTeacherModalStore} from "@/context/modals/addTeacher";
+useTeacherModalStore;
 
-function AddStudent() {
+function AddTeacher() {
   const [gender, setGender] = useState("male");
-  const { setStudentModalActive, studentModalActive } = useStudentModalStore();
+  const { teacherModalActive, setTeacherModalActive } = useTeacherModalStore();
 
   return (
     <>
-      {studentModalActive && (
+      {teacherModalActive && (
         <div className="modal-overlay fixed h-screen w-screen left-0 top-0"></div>
       )}
       <div
-        className={`modal ${
-          studentModalActive ? "modal-active" : ""
-        } add-student fixed h-screen w-screen left-0 top-0 flex items-center justify-center`}
+        className={`modal add-student fixed h-screen w-screen left-0 top-0 flex items-center justify-center ${
+          teacherModalActive ? "modal-active" : ""
+        }`}
       >
         <form className="card">
           <span className="card-title flex items-center">
-            New student
+            New teacher
             <span
-              onClick={setStudentModalActive}
+              onClick={setTeacherModalActive}
               title="discard"
               className="close ml-auto"
             >
@@ -34,17 +35,28 @@ function AddStudent() {
             <div className="grid w-full grid-cols-2 gap-4">
               <div className="input-group">
                 <label htmlFor="">First name</label>
-                <input type="text" placeholder="First name" />
+                <input required type="text" placeholder="First name" />
               </div>
               <div className="input-group">
                 <label htmlFor="">Last name</label>
-                <input type="text" placeholder="Last name" />
+                <input required type="text" placeholder="Last name" />
+              </div>
+            </div>
+
+            <div className="grid w-full grid-cols-2 gap-4">
+              <div className="input-group">
+                <label htmlFor="">Email</label>
+                <input required type="email" placeholder="Email" />
+              </div>
+              <div className="input-group">
+                <label htmlFor="">Phone</label>
+                <input required type="text" placeholder="Phone" />
               </div>
             </div>
 
             <div className="input-group">
-              <label htmlFor="">Date of birth</label>
-              <input type="text" placeholder="Date of birth" />
+              <label htmlFor="">Date employed</label>
+              <input required type="date" placeholder="Address" />
             </div>
 
             <div className="input-group flex gap-2 w-full">
@@ -77,23 +89,12 @@ function AddStudent() {
             </div>
 
             <div className="input-group">
-              <label htmlFor="">Date enrolled</label>
-              <input type="text" placeholder="Date enrolled" />
-            </div>
-
-            <div className="grid w-full grid-cols-2 gap-4">
-              <div className="input-group">
-                <label htmlFor="">Class</label>
-                <input type="text" placeholder="Class" />
-              </div>
-              <div className="input-group">
-                <label htmlFor="">Student number</label>
-                <input type="text" placeholder="Student number or ID number" />
-              </div>
+              <label htmlFor="">Address</label>
+              <input required type="text" placeholder="Address" />
             </div>
 
             <div className="cta-container flex gap-2 w-full justify-end">
-              <span onClick={setStudentModalActive} className="cta-2">
+              <span onClick={setTeacherModalActive} className="cta-2">
                 Cancel
               </span>
               <span className="cta">Save</span>
@@ -105,4 +106,4 @@ function AddStudent() {
   );
 }
 
-export default AddStudent;
+export default AddTeacher;

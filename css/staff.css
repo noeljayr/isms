@@ -1,0 +1,7 @@
+.teachers-table .table-header {
+  grid-template-columns: 2rem 1fr 1fr 1fr 5rem 2rem;
+}
+
+.teachers-table .tr {
+  grid-template-columns: 2rem 1fr 1fr 1fr 5rem 2rem;
+}

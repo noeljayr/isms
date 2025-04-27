@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import XClose from "../svg/XClose";
+import XClose from "../../../svg/XClose";
 import useGuardianModalStore from "@/context/modals/addGuardian";
 
 function AddGuardian() {
@@ -35,17 +35,17 @@ function AddGuardian() {
             <div className="grid w-full grid-cols-2 gap-4">
               <div className="input-group">
                 <label htmlFor="">First name</label>
-                <input type="text" placeholder="First name" />
+                <input required type="text" placeholder="First name" />
               </div>
               <div className="input-group">
                 <label htmlFor="">Last name</label>
-                <input type="text" placeholder="Last name" />
+                <input required type="text" placeholder="Last name" />
               </div>
             </div>
 
             <div className="input-group">
               <label htmlFor="">Address</label>
-              <input type="text" placeholder="Address" />
+              <input required type="text" placeholder="Address" />
             </div>
 
             <div className="input-group flex gap-2 w-full">
@@ -79,16 +79,18 @@ function AddGuardian() {
             <div className="grid w-full grid-cols-2 gap-4">
               <div className="input-group">
                 <label htmlFor="">Email</label>
-                <input type="email" placeholder="Email" />
+                <input required type="email" placeholder="Email" />
               </div>
               <div className="input-group">
                 <label htmlFor="">Phone</label>
-                <input type="text" placeholder="Phone" />
+                <input required type="text" placeholder="Phone" />
               </div>
             </div>
 
             <div className="cta-container flex gap-2 w-full justify-end">
-              <span onClick={setGuardianModalActive} className="cta-2">Cancel</span>
+              <span onClick={setGuardianModalActive} className="cta-2">
+                Cancel
+              </span>
               <span className="cta">Save</span>
             </div>
           </div>

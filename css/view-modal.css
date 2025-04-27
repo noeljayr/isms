@@ -1,0 +1,77 @@
+.view-modal form {
+  width: 35rem !important;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+.view-modal .modal-content {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  overflow: hidden;
+}
+
+.section {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.section * {
+  font-size: var(--p2);
+}
+
+.section .student-overview * {
+  font-size: var(--p3);
+}
+
+.view-modal .tabs {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, calc(100% / 3));
+  height: fit-content;
+}
+
+.view-modal .tabs .tab {
+  font-size: var(--p2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition-delay: 0.35s;
+}
+
+.view-modal .tabs {
+  border-bottom: 1px solid var(--border);
+}
+
+.view-modal .tab-indicator {
+  height: 1px;
+  width: calc(100% / 3);
+  background-color: var(--primary);
+  bottom: -1px;
+}
+
+.edit-btn {
+  height: 1.5rem;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  font-size: var(--p3);
+  font-weight: 500;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  cursor: pointer;
+}
+
+.edit-btn svg {
+  height: 0.65rem;
+  width: 0.65rem;
+  margin-left: 5px;
+}

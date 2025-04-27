@@ -1,0 +1,9 @@
+.classes-table{
+    grid-template-rows: auto 1fr;
+}
+
+.classes-table .table-header,
+.classes-table .tr{
+    grid-template-columns: 1fr 1fr 1fr 1fr 2rem;
+}
+

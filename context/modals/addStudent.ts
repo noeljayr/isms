@@ -5,10 +5,22 @@ interface AddStudentModalState {
   setStudentModalActive: () => void;
 }
 
-const useStudentModalStore = create<AddStudentModalState>((set) => ({
+export const useStudentModalStore = create<AddStudentModalState>((set) => ({
   studentModalActive: false,
   setStudentModalActive: () =>
     set((state) => ({ studentModalActive: !state.studentModalActive })),
 }));
 
-export default useStudentModalStore;
+
+interface ImportStudentsModalState {
+  importStudentsModalActive: boolean;
+  setImportStudentModalActive: () => void;
+}
+
+export const useImportStudentModalStore = create<ImportStudentsModalState>((set) => ({
+  importStudentsModalActive: false,
+  setImportStudentModalActive: () =>
+    set((state) => ({ importStudentsModalActive: !state.importStudentsModalActive })),
+}));
+
+

@@ -1,5 +1,8 @@
+@import url(./view-modal.css);
+
 .modal-overlay {
   background: rgba(26, 26, 26, 0.15);
+  z-index: 4;
 }
 
 .modal {
@@ -7,6 +10,14 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  z-index: 5;
+}
+
+
+
+.view-modal {
+  transform: scale(1);
+  left: 120%;
 }
 
 .modal-active {
@@ -16,8 +27,23 @@
   pointer-events: all;
 }
 
+.view-modal-active {
+  left: 0;
+}
+
 .modal form {
   width: 30rem;
+  overflow: visible;
+}
+
+.modal .card-body {
+  overflow: visible !important;
+}
+
+
+
+.view-modal form .cta-container{
+  margin-top: auto;
 }
 
 .modal .close {
@@ -68,4 +94,151 @@
   font-weight: 500;
   opacity: 0.5;
   font-family: "Lexend", sans-serif;
+}
+
+.classes-picker,
+.sub-classes {
+  z-index: 2;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 10rem;
+  bottom: calc(100% - 1rem);
+  left: 0;
+}
+
+.sub-classes {
+  left: calc(100% + 0.75rem);
+  top: 0;
+  height: fit-content;
+}
+
+.classes-picker * {
+  font-size: var(--p3);
+  font-weight: 500;
+}
+
+.classes-picker .class {
+  border-radius: var(--radius-s);
+  cursor: pointer;
+}
+
+.classes-picker .class:hover {
+  background-color: var(--background);
+}
+
+.classes-picker .active-class {
+  background-color: var(--background);
+}
+
+.empty-classes {
+  height: 8rem;
+}
+
+.empty-classes a {
+  padding: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+.classes-picker .check-icon {
+  height: 1rem;
+  width: 1rem;
+  margin-right: 0.5rem;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.classes-picker .selected-class .check-icon {
+  background-color: var(--primary);
+}
+
+.classes-picker .selected-main-class {
+  background-color: var(--background);
+}
+
+.classes-picker .check-icon svg {
+  height: 0.65rem;
+  width: 0.65rem;
+  margin: 0;
+  transform: scale(0);
+}
+
+.classes-picker .selected-class .check-icon svg {
+  transform: scale(1);
+}
+
+.classes-picker .check-icon svg path {
+  stroke: var(--white);
+  stroke-width: 2px;
+}
+
+.dropzone {
+  height: 7.5rem;
+  border-radius: var(--radius);
+}
+
+.dropzone * {
+  font-size: var(--p2);
+}
+
+.dropzone svg {
+  height: 1rem;
+  width: 1rem;
+  margin-bottom: 0.25rem;
+  opacity: 0.75;
+}
+
+.dropzone .plus-icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: var(--background);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+}
+
+.dropzone .plus-icon svg {
+  margin-bottom: 0;
+}
+
+.dropzone .plus-icon svg path {
+  stroke: var(--primary);
+}
+
+.dropzone-file-info {
+  background-color: var(--background-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.dropzone-file-info * {
+  font-size: var(--p2);
+}
+
+.dropzone-file-info .file-size {
+  font-size: var(--p3);
+}
+
+.dropzone-actions svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.dropzone-actions button {
+  border-radius: var(--radius-s);
+  /* height: 1.75rem;
+  width: 1.75rem; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }

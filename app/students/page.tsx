@@ -6,8 +6,12 @@ import Search from "@/components/svg/Search";
 import "@/css/students.css";
 import { useEffect, useState } from "react";
 import { studentsData } from "@/data/students";
-import AddStudent from "@/components/modals/AddStudent";
-import useStudentModalStore from "@/context/modals/addStudent";
+import AddStudent from "@/components/modals/upload/students/AddStudent";
+import {useStudentModalStore, useImportStudentModalStore} from "@/context/modals/addStudent";
+import Student from "@/components/Student";
+import FileUpload from "@/components/svg/FileUpload";
+import ImportStudents from "@/components/modals/upload/students/ImportStudents";
+import ViewStudent from "@/components/modals/view/ViewStudent";
 
 const years = ["2025", "2024", "2023"];
 const classes = ["Form 4", "Form 3", "Form 2", "Form 1"];
@@ -18,6 +22,7 @@ function Students() {
   const [activeClass, setActiveClass] = useState("Form 4");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { setStudentModalActive } = useStudentModalStore();
+  const {setImportStudentModalActive} = useImportStudentModalStore()
 
   useEffect(() => {
     const index = years.indexOf(activeYear);
@@ -30,7 +35,12 @@ function Students() {
         <div className="flex gap-3 items-center w-full">
           <button onClick={setStudentModalActive} className="cta">
             <Plus />
-            New student
+            Student
+          </button>
+
+          <button onClick={setImportStudentModalActive} className="cta-2">
+            <FileUpload />
+            Import students
           </button>
           <div className="search input-group mr-auto">
             <Search />
@@ -110,25 +120,14 @@ function Students() {
           </div>
           <div className="table-body hide-scrollbar">
             {studentsData.map((student) => (
-              <div key={student.id} className="tr">
-                <span className="td number student-number">
-                  {student.studentNumber}
-                </span>
-                <span className="td truncate font-medium">{student.name}</span>
-                <span className="td flex flex-col gap-0.5 truncate">
-                  <span className="truncate">{student.guardian.name}</span>
-                  <span className="flex gap-1.5 items-center opacity-65">
-                    <span className="guardian-email">
-                      {student.guardian.email}
-                    </span>
-                    <span className="opacity-50">•</span>
-                    <span className="guardian-phone">
-                      {student.guardian.phone}
-                    </span>
-                  </span>
-                </span>
-                <span className="td">{student.class}</span>
-              </div>
+              <Student
+                id={student.id}
+                name={student.name}
+                class={student.class}
+                guardian={student.guardian}
+                studentNumber={student.studentNumber}
+                key={student.id}
+              />
             ))}
           </div>
           <div className="pagination">
@@ -139,6 +138,8 @@ function Students() {
       </div>
 
       <AddStudent />
+      <ImportStudents />
+      <ViewStudent />
     </>
   );
 }

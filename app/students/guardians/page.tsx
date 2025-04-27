@@ -5,7 +5,9 @@ import Search from "@/components/svg/Search";
 import { guardians } from "@/data/guardians";
 import "@/css/students.css";
 import useGuardianModalStore from "@/context/modals/addGuardian";
-import AddGuardian from "@/components/modals/AddGuardian";
+import AddGuardian from "@/components/modals/upload/guardians/AddGuardian";
+import Eye from "@/components/svg/Eye";
+import FileUpload from "@/components/svg/FileUpload";
 
 function Guardians() {
   const { setGuardianModalActive } = useGuardianModalStore();
@@ -16,6 +18,10 @@ function Guardians() {
           <button onClick={setGuardianModalActive} className="cta">
             <Plus />
             New Guardian
+          </button>
+          <button onClick={() => {}} className="cta-2">
+            <FileUpload />
+            Import guardians
           </button>
           <div className="search input-group mr-auto">
             <Search />
@@ -30,12 +36,17 @@ function Guardians() {
             <div className="th">Phone</div>
           </div>
           <div className="table-body hide-scrollbar">
-            {guardians.map((guardian) => (
-              <div key={guardian.id} className="tr">
+            {guardians.map((guardian, index) => (
+              <div key={index} className="tr">
                 <span className="td font-medium">{guardian.name}</span>
                 <span className="td truncate">{guardian.email}</span>
 
                 <span>{guardian.phone}</span>
+                <span className="action">
+                  <span className="action-1">
+                    <Eye />
+                  </span>
+                </span>
               </div>
             ))}
           </div>

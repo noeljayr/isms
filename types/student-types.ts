@@ -1,6 +1,6 @@
 import { Guardian } from "./guardian-types";
 
-export interface Student {
+export interface StudentTypes {
   id: string;
   studentNumber: number;
   name: string;
@@ -8,4 +8,4 @@ export interface Student {
   class: string;
 }
 
-export type Students = Student[];
+export type StudentsTypes = StudentTypes[];

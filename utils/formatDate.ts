@@ -1,5 +1,8 @@
-export function formatDate(dateString: string): string {
-  const months = [
+export function formatDate(isoString: string): string {
+  const date = new Date(isoString);
+
+  const day = date.getUTCDate();
+  const monthNames = [
     "January",
     "February",
     "March",
@@ -13,9 +16,8 @@ export function formatDate(dateString: string): string {
     "November",
     "December",
   ];
+  const month = monthNames[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
 
-  const [year, month, day] = dateString.split("-").map(Number);
-  const monthName = months[month - 1];
-
-  return `${day} ${monthName} ${year}`;
+  return `${day} ${month} ${year}`;
 }
