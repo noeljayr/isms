@@ -6,7 +6,7 @@ interface ViewStudentModalState {
 }
 
 const useViewStudentModalStore = create<ViewStudentModalState>((set) => ({
-  viewStudentModalActive: true,
+  viewStudentModalActive: false,
   setViewStudentModalActive: () =>
     set((state) => ({ viewStudentModalActive: !state.viewStudentModalActive })),
 }));

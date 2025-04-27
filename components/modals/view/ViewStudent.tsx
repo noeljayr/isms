@@ -59,7 +59,10 @@ function ViewStudent() {
             </span>
           </span>
 
-          <div style={{overflow: "hidden"}} className="card-body modal-content grid gap-4">
+          <div
+            style={{ overflow: "hidden" }}
+            className="card-body modal-content grid gap-4"
+          >
             <div className="section gap-1">
               <span className="student-name font-medium">
                 {studentData.firstName + " " + studentData.lastName}
@@ -94,6 +97,7 @@ function ViewStudent() {
               ></span>
               {tabs.map((tab, index) => (
                 <span
+                  key={index}
                   onClick={() => setActiveTab(tab)}
                   className={`tab font-medium ${
                     activeTab == tab ? "opacity-100" : "opacity-40"
