@@ -1,4 +1,5 @@
 export interface SubClassTypes {
+  id: string;
   name: string;
   students: number;
   teachers: number;
@@ -6,8 +7,9 @@ export interface SubClassTypes {
 
 // Type for a class
 export interface ClassTypes {
+  id: string
   name: string;
-  subClasses: SubClassTypes[];
+  // subClasses: SubClassTypes[];
   totalStudent: number;
   totalTeachers: number;
   attandanceRate: number;

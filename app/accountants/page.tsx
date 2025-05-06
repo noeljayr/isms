@@ -8,10 +8,67 @@ import accountants from "@/data/accountants";
 import AddTeacher from "@/components/modals/upload/teachers/AddTeacher";
 import { useTeacherModalStore } from "@/context/modals/addTeacher";
 import FileUpload from "@/components/svg/FileUpload";
+import { BASE_URL } from "@/constants/BASE_URL";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { getCookie } from "cookies-next/client";
+import { StaffTypes } from "@/types/staff";
 useTeacherModalStore;
 
 function Accountants() {
   const { setTeacherModalActive } = useTeacherModalStore();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  // const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const token = getCookie("token");
+  const [accountants, setAccountants] = useState<StaffTypes[]>([]);
+  const searchParams = useSearchParams();
+  const [page, setPage] = useState<number>(
+    Number(searchParams.get("page")) || 1
+  );
+  const [search, setSearch] = useState<string>(
+    searchParams.get("search") || ""
+  );
+
+  useEffect(() => {
+    const getAccountants = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      setErrorMessage("");
+
+      try {
+        const response = await fetch(
+          `${BASE_URL}/Accountants?searchQuery=${search}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.status == 200) {
+          setIsLoading(false);
+          setAccountants(data.data);
+        } else {
+          setIsError(true);
+          setErrorMessage(data.title);
+        }
+      } catch (err: any) {
+        setIsError(true);
+        setErrorMessage("Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getAccountants();
+  }, []);
 
   return (
     <>

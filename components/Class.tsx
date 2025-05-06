@@ -9,7 +9,7 @@ function Class(props: ClassTypes) {
  
 
   return (
-    <Link href={`/classes/${props.name}`} className="tr">
+    <Link href={`/classes/${props.id}`} className="tr">
       <span className="name">{props.name}</span>
       <span className="students-count number opacity-85">
         {props.totalStudent}

@@ -2,12 +2,89 @@
 
 import React, { useState } from "react";
 import XClose from "@/components/svg/XClose";
-import {useTeacherModalStore} from "@/context/modals/addTeacher";
+import { useTeacherModalStore } from "@/context/modals/addTeacher";
+import CheckCircle from "@/components/svg/CheckCircle";
+import { BASE_URL } from "@/constants/BASE_URL";
+import { jwtDecode } from "jwt-decode";
+import { TokenTypes } from "@/types/token";
+import { getCookie } from "cookies-next/client";
+import { motionTranstion } from "@/constants/motionTranstion";
 useTeacherModalStore;
+
+import { AnimatePresence, motion } from "motion/react";
+import Loader from "@/components/ux/Loader";
 
 function AddTeacher() {
   const [gender, setGender] = useState("male");
   const { teacherModalActive, setTeacherModalActive } = useTeacherModalStore();
+
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const token = getCookie("token");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState(lastName);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, SetEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [subClassId, setsubClassId] = useState("");
+  const [classId, setClassId] = useState("");
+
+  const addTeacher = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    setErrorMessage("");
+    setIsSuccess(false);
+
+    if (token) {
+      const decodedToken: TokenTypes = jwtDecode(token);
+      const schoolId = decodedToken.SchoolId;
+      try {
+        const response = await fetch(`${BASE_URL}/Guardians`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            schoolId,
+            gender,
+            email,
+            classId,
+            subClassId,
+            address,
+            phoneNumber,
+            password,
+            status: "active",
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.status == 201) {
+          setIsLoading(false);
+          setIsSuccess(true);
+        } else {
+          setIsError(true);
+          setErrorMessage(data.title);
+        }
+      } catch (err: any) {
+        setIsError(true);
+        setErrorMessage("Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setIsError(true);
+      setErrorMessage("Not authorized");
+    }
+  };
+
 
   return (
     <>
@@ -19,7 +96,12 @@ function AddTeacher() {
           teacherModalActive ? "modal-active" : ""
         }`}
       >
-        <form className="card">
+        <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          addTeacher();
+        }}
+        className="card">
           <span className="card-title flex items-center">
             New teacher
             <span
@@ -35,28 +117,35 @@ function AddTeacher() {
             <div className="grid w-full grid-cols-2 gap-4">
               <div className="input-group">
                 <label htmlFor="">First name</label>
-                <input required type="text" placeholder="First name" />
+                <input
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                  type="text"
+                  placeholder="First name"
+                />
               </div>
               <div className="input-group">
                 <label htmlFor="">Last name</label>
-                <input required type="text" placeholder="Last name" />
-              </div>
-            </div>
-
-            <div className="grid w-full grid-cols-2 gap-4">
-              <div className="input-group">
-                <label htmlFor="">Email</label>
-                <input required type="email" placeholder="Email" />
-              </div>
-              <div className="input-group">
-                <label htmlFor="">Phone</label>
-                <input required type="text" placeholder="Phone" />
+                <input
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                  type="text"
+                  placeholder="Last name"
+                />
               </div>
             </div>
 
             <div className="input-group">
-              <label htmlFor="">Date employed</label>
-              <input required type="date" placeholder="Address" />
+              <label htmlFor="">Address</label>
+              <input
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                type="text"
+                placeholder="Address"
+              />
             </div>
 
             <div className="input-group flex gap-2 w-full">
@@ -70,7 +159,9 @@ function AddTeacher() {
                     gender == "male" ? "selected-radio-btn" : ""
                   }`}
                 >
-                  <span className="radio-btn" />
+                  <span className="radio-btn">
+                    <CheckCircle />
+                  </span>
                   <span className="radio-btn-label">Male</span>
                 </span>
 
@@ -82,22 +173,79 @@ function AddTeacher() {
                     gender == "female" ? "selected-radio-btn" : ""
                   }`}
                 >
-                  <span className="radio-btn" />
+                  <span className="radio-btn">
+                    <CheckCircle />
+                  </span>
                   <span className="radio-btn-label">Female</span>
                 </span>
               </div>
             </div>
-
-            <div className="input-group">
-              <label htmlFor="">Address</label>
-              <input required type="text" placeholder="Address" />
+            <div className="grid w-full grid-cols-2 gap-4">
+              <div className="input-group">
+                <label htmlFor="">Email</label>
+                <input
+                  value={email}
+                  onChange={(e) => SetEmail(e.target.value)}
+                  required
+                  type="email"
+                  placeholder="Email"
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="">Phone</label>
+                <input
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  required
+                  type="text"
+                  placeholder="Phone"
+                />
+              </div>
             </div>
 
-            <div className="cta-container flex gap-2 w-full justify-end">
+            <div className="cta-container flex gap-2 w-full justify-end items-center">
+              <AnimatePresence>
+                {isError && (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={motionTranstion}
+                    style={{
+                      width: "fit-content",
+                      paddingLeft: "1rem",
+                      paddingRight: "1rem",
+                      height: "fit-content",
+                    }}
+                    className="error mr-auto"
+                  >
+                    {errorMessage}
+                  </motion.span>
+                )}
+
+                {isSuccess && (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={motionTranstion}
+                    style={{
+                      width: "fit-content",
+                      paddingLeft: "1rem",
+                      paddingRight: "1rem",
+                      height: "fit-content",
+                    }}
+                    className="success mr-auto"
+                  >
+                    Teacher has been added successfully
+                  </motion.span>
+                )}
+              </AnimatePresence>
+
               <span onClick={setTeacherModalActive} className="cta-2">
                 Cancel
               </span>
-              <span className="cta">Save</span>
+              <button className="cta">{isLoading ? <Loader /> : "Save"}</button>
             </div>
           </div>
         </form>

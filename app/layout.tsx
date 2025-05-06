@@ -38,7 +38,7 @@ export default function RootLayout({
         <div className="page p-3 pb-0 flex flex-col gap-2 w-full h-full overflow-hidden">
           <div className="top-bar flex items-center justify-between w-full">
             <BreadCrumbs />
-            <UserProfile />
+            {/* <UserProfile /> */}
           </div>
           {children}
         </div>

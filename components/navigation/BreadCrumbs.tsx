@@ -17,6 +17,11 @@ import UserGuard from "../svg/UserGuard";
 
 function BreadCrumbs() {
   const pathname = usePathname();
+
+  if (pathname.startsWith("/auth")) {
+    return <></>;
+  }
+  
   return (
     <div className="bread-crumbs opacity-75 flex items-center gap-2">
       <span

@@ -1,21 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
-import XClose from "../../../svg/XClose";
-import useGuardianModalStore from "@/context/modals/addGuardian";
+import XClose from "@/components/svg/XClose";
+import { useTeacherModalStore } from "@/context/modals/addTeacher";
 import CheckCircle from "@/components/svg/CheckCircle";
-import { getCookie } from "cookies-next/client";
-import { TokenTypes } from "@/types/token";
-import { jwtDecode } from "jwt-decode";
 import { BASE_URL } from "@/constants/BASE_URL";
-import { AnimatePresence, motion } from "motion/react";
+import { jwtDecode } from "jwt-decode";
+import { TokenTypes } from "@/types/token";
+import { getCookie } from "cookies-next/client";
 import { motionTranstion } from "@/constants/motionTranstion";
+useTeacherModalStore;
+
+import { AnimatePresence, motion } from "motion/react";
 import Loader from "@/components/ux/Loader";
 
-function AddGuardian() {
+function AddAccountant() {
   const [gender, setGender] = useState("male");
-  const { setGuardianModalActive, guardianModalActive, setAddGuardianChange } =
-    useGuardianModalStore();
+  const { teacherModalActive, setTeacherModalActive } = useTeacherModalStore();
+
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -31,7 +33,7 @@ function AddGuardian() {
   const [subClassId, setsubClassId] = useState("");
   const [classId, setClassId] = useState("");
 
-  const addGuardian = async () => {
+  const addTeacher = async () => {
     setIsLoading(true);
     setIsError(false);
     setErrorMessage("");
@@ -67,7 +69,6 @@ function AddGuardian() {
         if (response.status == 201) {
           setIsLoading(false);
           setIsSuccess(true);
-          setAddGuardianChange();
         } else {
           setIsError(true);
           setErrorMessage(data.title);
@@ -84,27 +85,27 @@ function AddGuardian() {
     }
   };
 
+
   return (
     <>
-      {guardianModalActive && (
+      {teacherModalActive && (
         <div className="modal-overlay fixed h-screen w-screen left-0 top-0"></div>
       )}
       <div
         className={`modal add-student fixed h-screen w-screen left-0 top-0 flex items-center justify-center ${
-          guardianModalActive ? "modal-active" : ""
+          teacherModalActive ? "modal-active" : ""
         }`}
       >
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            addGuardian();
-          }}
-          className="card"
-        >
+        onSubmit={(e) => {
+          e.preventDefault();
+          addTeacher();
+        }}
+        className="card">
           <span className="card-title flex items-center">
-            New guardian
+            New teacher
             <span
-              onClick={setGuardianModalActive}
+              onClick={setTeacherModalActive}
               title="discard"
               className="close ml-auto"
             >
@@ -236,12 +237,12 @@ function AddGuardian() {
                     }}
                     className="success mr-auto"
                   >
-                    Guardian has been added successfully
+                    Classes has been added successfully
                   </motion.span>
                 )}
               </AnimatePresence>
 
-              <span onClick={setGuardianModalActive} className="cta-2">
+              <span onClick={setTeacherModalActive} className="cta-2">
                 Cancel
               </span>
               <button className="cta">{isLoading ? <Loader /> : "Save"}</button>
@@ -253,4 +254,4 @@ function AddGuardian() {
   );
 }
 
-export default AddGuardian;
+export default AddAccountant;

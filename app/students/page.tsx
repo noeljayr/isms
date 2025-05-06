@@ -5,13 +5,20 @@ import Plus from "@/components/svg/Plus";
 import Search from "@/components/svg/Search";
 import "@/css/students.css";
 import { useEffect, useState } from "react";
-import { studentsData } from "@/data/students";
 import AddStudent from "@/components/modals/upload/students/AddStudent";
-import {useStudentModalStore, useImportStudentModalStore} from "@/context/modals/addStudent";
+import {
+  useStudentModalStore,
+  useImportStudentModalStore,
+} from "@/context/modals/addStudent";
 import Student from "@/components/Student";
 import FileUpload from "@/components/svg/FileUpload";
 import ImportStudents from "@/components/modals/upload/students/ImportStudents";
 import ViewStudent from "@/components/modals/view/ViewStudent";
+import { getCookie } from "cookies-next";
+import { useRouter, useSearchParams } from "next/navigation";
+import { StudentsTypes } from "@/types/student-types";
+import { BASE_URL } from "@/constants/BASE_URL";
+import Loader from "@/components/ux/Loader";
 
 const years = ["2025", "2024", "2023"];
 const classes = ["Form 4", "Form 3", "Form 2", "Form 1"];
@@ -21,13 +28,66 @@ function Students() {
   const [position, setPosition] = useState("0");
   const [activeClass, setActiveClass] = useState("Form 4");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { setStudentModalActive } = useStudentModalStore();
-  const {setImportStudentModalActive} = useImportStudentModalStore()
+  const { setStudentModalActive, studentChange } = useStudentModalStore();
+  const { setImportStudentModalActive } = useImportStudentModalStore();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  // const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const token = getCookie("token");
+  const [studentsData, setStudentsData] = useState<StudentsTypes>([]);
+  const searchParams = useSearchParams();
+  const [page, setPage] = useState<number>(
+    Number(searchParams.get("page")) || 1
+  );
+  const [search, setSearch] = useState<string>(
+    searchParams.get("search") || ""
+  );
 
   useEffect(() => {
     const index = years.indexOf(activeYear);
     setPosition(`${index * 2.75}`);
   }, [activeYear]);
+
+  useEffect(() => {
+    const getStudents = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      setErrorMessage("");
+
+      try {
+        const response = await fetch(
+          `${BASE_URL}/students?searchQuery=${search}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.status == 200) {
+          setIsLoading(false);
+          setStudentsData(data.data);
+          setPage(data.page);
+        } else {
+          setIsError(true);
+          setErrorMessage(data.title);
+        }
+      } catch (err: any) {
+        setIsError(true);
+        setErrorMessage("Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getStudents();
+  }, [studentChange, search]);
 
   return (
     <>
@@ -44,7 +104,7 @@ function Students() {
           </button>
           <div className="search input-group mr-auto">
             <Search />
-            <input type="text" placeholder="Search for students..." />
+            <input value={search} onChange={(e)=>setSearch(e.target.value)} type="text" placeholder="Search for students..." />
           </div>
 
           <div
@@ -119,20 +179,36 @@ function Students() {
             <div className="th">Class</div>
           </div>
           <div className="table-body hide-scrollbar">
-            {studentsData.map((student) => (
-              <Student
-                id={student.id}
-                name={student.name}
-                class={student.class}
-                guardian={student.guardian}
-                studentNumber={student.studentNumber}
-                key={student.id}
-              />
-            ))}
+            {isLoading ? (
+              <div className="h-[5rem] w-[5rem] flex m-auto items-center justify-center">
+                <Loader variant="primary" />
+              </div>
+            ) : isError ? (
+              <div className="h-[5rem] w-fit flex m-auto items-center justify-center">
+                <span className="error">{errorMessage}</span>
+              </div>
+            ) : 
+              studentsData.length > 0 ? (
+                studentsData.map((student, index) => (
+                  <Student
+                    id={student.id}
+                    firstName={student.firstName}
+                    lastName={student.firstName}
+                    classId={student.classId}
+                    subClassId={student.subClassId}
+                    parentId={student.parentId}
+                    accountId={student.accountId}
+                    key={student.id}
+                  />
+                ))
+              ): (
+                <div style={{fontSize: "var(--p3)"}} className="h-[5rem]  opacity-75 w-fit flex m-auto items-center justify-center">No students found</div>
+              )
+            }
           </div>
-          <div className="pagination">
-            <span className="page active">1</span>
-            <span className="page">2</span>
+
+          <div className="pagination mt-auto">
+            <span className="page active">{page}</span>
           </div>
         </div>
       </div>

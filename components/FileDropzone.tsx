@@ -150,7 +150,7 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
             <div className="dropzone-actions ml-auto flex gap-2 items-center">
               {/* <span onClick={handleUploadClick}>Upload</span> */}
 
-              <button onClick={handleRemove}>
+              <button type="button" onClick={handleRemove}>
                 <Trash />
               </button>
             </div>

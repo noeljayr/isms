@@ -1,11 +1,17 @@
-import { Guardian } from "./guardian-types";
-
 export interface StudentTypes {
   id: string;
-  studentNumber: number;
-  name: string;
-  guardian: Guardian;
-  class: string;
+  // gender: string;
+  firstName: string;
+  lastName: string;
+  // schoolId: string;
+  accountId: string;
+  // email: string;
+  classId: string;
+  subClassId: string;
+  // dateOfBirth: string;
+  // address: string;
+  // enrollmentDate: string;
+  parentId: string;
 }
 
 export type StudentsTypes = StudentTypes[];

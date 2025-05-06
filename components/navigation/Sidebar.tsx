@@ -95,7 +95,6 @@ function Sidebar() {
   const activeLink = (linkName: string, href: string) => {
     let isActive = false;
 
-   
     pathname.startsWith(href) ? (isActive = true) : (isActive = false);
 
     if (linkName === "Home") {
@@ -104,6 +103,10 @@ function Sidebar() {
 
     return isActive;
   };
+
+  if (pathname.startsWith("/auth")) {
+    return <></>;
+  }
 
   return (
     <div className="sidebar py-3 px-2 flex flex-col gap-2">

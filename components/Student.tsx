@@ -7,17 +7,17 @@ function Student(props: StudentTypes) {
 
   return (
     <div onClick={setViewStudentModalActive} key={props.id} className="tr">
-      <span className="td number student-number">{props.studentNumber}</span>
-      <span className="td truncate font-medium">{props.name}</span>
+      <span className="td number student-number">{props.accountId}</span>
+      <span className="td truncate font-medium">{props.firstName} {" "} {props.lastName}  </span>
       <span className="td flex flex-col gap-0.5 truncate">
-        <span className="truncate">{props.guardian.name}</span>
+        {/* <span className="truncate">{props.guardian.name}</span>
         <span className="flex gap-1.5 items-center opacity-65">
           <span className="guardian-email">{props.guardian.email}</span>
           <span className="opacity-50">•</span>
           <span className="guardian-phone">{props.guardian.phone}</span>
-        </span>
+        </span> */}
       </span>
-      <span className="td">{props.class}</span>
+      <span className="td"></span>
       <span className="td action">
         <span className="action-1">
           <Eye />

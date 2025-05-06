@@ -3,21 +3,95 @@ import "@/css/classes.css";
 import Plus from "@/components/svg/Plus";
 import Search from "@/components/svg/Search";
 import { useEffect, useState } from "react";
-import { classData } from "@/data/classes";
 import useClassModalStore from "@/context/modals/addClass";
 import AddClass from "@/components/modals/upload/AddClass";
 import ViewClass from "@/components/modals/view/ViewClass";
 import Class from "@/components/Class";
+import { BASE_URL } from "@/constants/BASE_URL";
+import { getCookie } from "cookies-next/client";
+import Loader from "@/components/ux/Loader";
+import { useRouter, useSearchParams } from "next/navigation";
+
+type ClassType = {
+  id: string;
+  name: string;
+};
+
 const years = ["2025", "2024", "2023"];
 
 function Classes() {
-  const { setClassModalActive } = useClassModalStore();
+  const { setClassModalActive, addClassesChange } = useClassModalStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  // const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [activeYear, setActiveYear] = useState("2025");
   const [position, setPosition] = useState("0");
+  const token = getCookie("token");
+  const [classData, setClassData] = useState<ClassType[]>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [page, setPage] = useState<number>(
+    Number(searchParams.get("page")) || 1
+  );
+  const [search, setSearch] = useState<string>(
+    searchParams.get("search") || ""
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setPage(1);
+    console.log("search term is: " + search);
+    router.push(`?page=1&search=${e.target.value}`);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    router.push(`?page=${newPage}&search=${search}`);
+  };
+
   useEffect(() => {
     const index = years.indexOf(activeYear);
     setPosition(`${index * 2.75}`);
   }, [activeYear]);
+
+  useEffect(() => {
+    const getClasses = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      setErrorMessage("");
+
+      try {
+        const response = await fetch(
+          `${BASE_URL}/classes?searchQuery=${search}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.status == 200) {
+          setIsLoading(false);
+          setClassData(data.data);
+          setPage(data.page);
+        } else {
+          setIsError(true);
+          setErrorMessage(data.title);
+        }
+      } catch (err: any) {
+        setIsError(true);
+        setErrorMessage("Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getClasses();
+  }, [addClassesChange, search]);
 
   return (
     <>
@@ -31,7 +105,12 @@ function Classes() {
             </button>
             <div className="search input-group mr-auto">
               <Search />
-              <input type="text" placeholder="Search for a class..." />
+              <input
+                type="text"
+                value={search}
+                onChange={handleSearchChange}
+                placeholder="Search for a class..."
+              />
             </div>
 
             <div className={`years flex items-center relative`}>
@@ -67,17 +146,32 @@ function Classes() {
               <div className=""></div>
             </div>
             <div className="table-body hide-scrollbar">
-              {classData.map((classD, index) => (
-                <Class
-                  name={classD.name}
-                  attandanceRate={classD.attandanceRate}
-                  subClasses={classD.subClasses}
-                  totalStudent={classD.totalStudent}
-                  totalTeachers={classD.totalTeachers}
-                  key={index}
-                />
-              ))}
+              {isLoading ? (
+                <div className="h-[5rem] w-[5rem] flex m-auto items-center justify-center">
+                  <Loader variant="primary" />
+                </div>
+              ) : isError ? (
+                <div className="h-[5rem] w-fit flex m-auto items-center justify-center">
+                  <span className="error">{errorMessage}</span>
+                </div>
+              ) : (
+                classData.map((classD, index) => (
+                  <Class
+                    id={classD.id}
+                    name={classD.name}
+                    attandanceRate={0}
+                    totalStudent={0}
+                    totalTeachers={0}
+                    key={index}
+                  />
+                ))
+              )}
             </div>
+
+            <div className="pagination pt-4">
+              <span className="page active">{page}</span>
+            </div>
+            
           </div>
         </div>
       </div>

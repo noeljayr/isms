@@ -1,8 +1,16 @@
+"use client";
+
 import React from "react";
-import Image from "next/image";
 import User from "./svg/User";
+import { usePathname } from "next/navigation";
 function UserProfile() {
   const profilePic = null;
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/auth")) {
+    return <></>;
+  }
+
   return (
     <div className="user-profile flex items-center gap-2">
       <div className="avatar flex items-center justify-center">

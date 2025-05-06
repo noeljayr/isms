@@ -3,12 +3,17 @@ import { create } from "zustand";
 interface AddStudentModalState {
   studentModalActive: boolean;
   setStudentModalActive: () => void;
+  studentChange: boolean,
+  setStudentChange: ()=>void
 }
 
 export const useStudentModalStore = create<AddStudentModalState>((set) => ({
   studentModalActive: false,
   setStudentModalActive: () =>
     set((state) => ({ studentModalActive: !state.studentModalActive })),
+  studentChange: false,
+  setStudentChange: () =>
+    set((state) => ({ studentChange: !state.studentChange })),
 }));
 
 

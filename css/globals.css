@@ -34,7 +34,7 @@ html {
   --background: #f5f6fd;
   --background-2: #fbfbfe;
   --success: #00ad00;
-  --error: #912018;
+  --error: rgba(255, 0, 0);
   --error-2: #fda29b;
   --error-3: #fef3f2;
   --warning: #f0c63d;
@@ -69,7 +69,7 @@ html {
   font-size: var(--p1);
   scroll-behavior: smooth;
   font-family: "Inter", sans-serif;
-  transition: var(--transition);
+  /* transition: var(--transition); */
 }
 
 body {
@@ -259,7 +259,8 @@ svg path {
 
 .checkbox-container .checkbox-label {
   font-size: var(--p2);
-  font-weight: 600;
+  opacity: 0.8;
+  font-weight: 500;
 }
 
 .checkbox-container .checkbox {
@@ -305,15 +306,34 @@ svg path {
 }
 
 .radio-btn-container .radio-btn {
-  height: 0.85rem;
-  width: 0.85rem;
+  height: 1rem;
+  width: 1rem;
   border: 1px solid var(--border);
   border-radius: 50%;
   cursor: pointer;
+  position: relative;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio-btn-container .radio-btn img {
+  height: 1.35rem;
+  width: 1.35rem;
+  position: absolute;
+  top: -0.21rem;
+  transition: var(--transition);
+  transform: scale(0);
+  opacity: 0;
 }
 
 .selected-radio-btn .radio-btn {
-  border: 5px solid var(--primary);
+  border: 1px solid transparent;
+}
+
+.selected-radio-btn .radio-btn img {
+  transform: scale(1);
+  opacity: 1;
 }
 .radio-btn-container .radio-btn-label {
   height: fit-content;
@@ -674,4 +694,35 @@ svg path {
 
 .date-input {
   position: relative !important;
+}
+
+.error {
+  font-size: var(--p3);
+  background-color: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.15);
+  width: 100%;
+  color: var(--error);
+  font-weight: 600;
+  padding: 0.15rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success {
+  font-size: var(--p3);
+  background-color: rgba(0, 173, 0, 0.5);
+  background-color: rgba(0, 173, 0, 0.05);
+  border: 1px solid rgba(0, 173, 0, 0.25);
+  width: 100%;
+  color: var(--success);
+  font-weight: 600;
+  padding: 0.15rem;
+  border-radius: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

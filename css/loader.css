@@ -1,0 +1,63 @@
+.loader {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: radial-gradient(farthest-side, #0008cc 94%, #0000) top/5px 5px
+      no-repeat,
+    conic-gradient(#0000 30%, #0008cc);
+  mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 0);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 0);
+  animation: spinner-c7wet2 1s infinite linear;
+  position: absolute;
+}
+
+.loader-2 {
+  animation-delay: 0.5;
+}
+
+@keyframes spinner-c7wet2 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.loader-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transactions .loader-container {
+  overflow: hidden;
+  height: 5rem;
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: radial-gradient(farthest-side, #fef6f7 94%, #0000) top/3.8px 3.8px
+      no-repeat,
+    conic-gradient(#0000 30%, #fef6f7);
+  mask: radial-gradient(farthest-side, #0000 calc(100% - 3.8px), #000 0);
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    #0000 calc(100% - 3.8px),
+    #000 0
+  );
+  animation: spinner-c7wet2 1s infinite linear;
+}
+
+@keyframes spinner-c7wet2 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.primary-loader{
+  background: radial-gradient(farthest-side, #0008cc 94%, #0000) top/3.8px 3.8px
+  no-repeat,
+conic-gradient(#0000 30%, #0008cc);
+mask: radial-gradient(farthest-side, #0000 calc(100% - 3.8px), #000 0);
+}
