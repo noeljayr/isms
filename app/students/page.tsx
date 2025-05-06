@@ -19,6 +19,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { StudentsTypes } from "@/types/student-types";
 import { BASE_URL } from "@/constants/BASE_URL";
 import Loader from "@/components/ux/Loader";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
+import SearchGuardian from "@/components/modals/upload/guardians/SearchGuardian";
 
 const years = ["2025", "2024", "2023"];
 const classes = ["Form 4", "Form 3", "Form 2", "Form 1"];
@@ -36,7 +38,7 @@ function Students() {
   // const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const [studentsData, setStudentsData] = useState<StudentsTypes>([]);
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(
@@ -104,7 +106,12 @@ function Students() {
           </button>
           <div className="search input-group mr-auto">
             <Search />
-            <input value={search} onChange={(e)=>setSearch(e.target.value)} type="text" placeholder="Search for students..." />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              type="text"
+              placeholder="Search for students..."
+            />
           </div>
 
           <div
@@ -187,24 +194,18 @@ function Students() {
               <div className="h-[5rem] w-fit flex m-auto items-center justify-center">
                 <span className="error">{errorMessage}</span>
               </div>
-            ) : 
-              studentsData.length > 0 ? (
-                studentsData.map((student, index) => (
-                  <Student
-                    id={student.id}
-                    firstName={student.firstName}
-                    lastName={student.firstName}
-                    classId={student.classId}
-                    subClassId={student.subClassId}
-                    parentId={student.parentId}
-                    accountId={student.accountId}
-                    key={student.id}
-                  />
-                ))
-              ): (
-                <div style={{fontSize: "var(--p3)"}} className="h-[5rem]  opacity-75 w-fit flex m-auto items-center justify-center">No students found</div>
-              )
-            }
+            ) : studentsData.length > 0 ? (
+              studentsData.map((student, index) => (
+                <Student student={student} key={student.id} />
+              ))
+            ) : (
+              <div
+                style={{ fontSize: "var(--p3)" }}
+                className="h-[5rem]  opacity-75 w-fit flex m-auto items-center justify-center"
+              >
+                No students found
+              </div>
+            )}
           </div>
 
           <div className="pagination mt-auto">
@@ -216,6 +217,7 @@ function Students() {
       <AddStudent />
       <ImportStudents />
       <ViewStudent />
+      {/* <SearchGuardian /> */}
     </>
   );
 }

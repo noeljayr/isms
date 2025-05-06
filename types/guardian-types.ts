@@ -1,8 +1,9 @@
 export interface Guardian {
     id: string;
     firstName: string;
-    LastName: string;
+    lastName: string;
     email: string;
-    phone: string;
+    phoneNumber: string;
+    address: string
   }
   

@@ -20,6 +20,7 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    outline: none;
   }
 }
 
@@ -272,6 +273,7 @@ svg path {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: var(--transition);
 }
 
 .checkbox-container .checkbox svg {
@@ -279,6 +281,7 @@ svg path {
   width: 0.65rem;
   visibility: hidden;
   transform: scale(0);
+  transition: var(--transition);
 }
 
 .checkbox-container .checkbox svg path {

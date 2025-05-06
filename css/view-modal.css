@@ -46,10 +46,12 @@
   text-align: center;
   cursor: pointer;
   transition-delay: 0.35s;
+  transition: var(--transition);
 }
 
 .view-modal .tabs {
   border-bottom: 1px solid var(--border);
+  transition: var(--transition);
 }
 
 .view-modal .tab-indicator {
@@ -57,6 +59,7 @@
   width: calc(100% / 3);
   background-color: var(--primary);
   bottom: -1px;
+  transition: var(--transition);
 }
 
 .edit-btn {
@@ -68,6 +71,7 @@
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   cursor: pointer;
+  transition: var(--transition);
 }
 
 .edit-btn svg {

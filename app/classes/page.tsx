@@ -11,6 +11,7 @@ import { BASE_URL } from "@/constants/BASE_URL";
 import { getCookie } from "cookies-next/client";
 import Loader from "@/components/ux/Loader";
 import { useRouter, useSearchParams } from "next/navigation";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
 
 type ClassType = {
   id: string;
@@ -27,7 +28,7 @@ function Classes() {
   const [errorMessage, setErrorMessage] = useState("");
   const [activeYear, setActiveYear] = useState("2025");
   const [position, setPosition] = useState("0");
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const [classData, setClassData] = useState<ClassType[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -171,7 +172,6 @@ function Classes() {
             <div className="pagination pt-4">
               <span className="page active">{page}</span>
             </div>
-            
           </div>
         </div>
       </div>

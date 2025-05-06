@@ -13,6 +13,7 @@ import { BASE_URL } from "@/constants/BASE_URL";
 import Loader from "@/components/ux/Loader";
 import { TokenTypes } from "@/types/token";
 import { jwtDecode } from "jwt-decode";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
 
 const INITIAL_SUGGESTED = ["A", "B", "C", "D", "E", "F", "X", "Y", "Z"];
 
@@ -25,7 +26,7 @@ function AddClass() {
   const [mainClassSuccess, setMainClassSuccess] = useState(false);
   const [mainClassId, setMainClassId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
 
   const [name, setName] = useState("");
 

@@ -2,6 +2,8 @@ import { jwtDecode } from "jwt-decode";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+export const TOKEN_COOKIE_NAME = "codewave_token";
+
 const checkToken = (token: string | undefined) => {
   if (!token) return true;
   let payload;
@@ -22,7 +24,7 @@ const checkToken = (token: string | undefined) => {
 };
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
+  const token = request.cookies.get("codewave_token")?.value;
 
   if (
     request.nextUrl.pathname == "/auth" ||

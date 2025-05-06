@@ -11,6 +11,8 @@ import { BASE_URL } from "@/constants/BASE_URL";
 import { AnimatePresence, motion } from "motion/react";
 import { motionTranstion } from "@/constants/motionTranstion";
 import Loader from "@/components/ux/Loader";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
+import { generatePassword } from "@/utils/generatePassword";
 
 function AddGuardian() {
   const [gender, setGender] = useState("male");
@@ -21,10 +23,9 @@ function AddGuardian() {
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState(lastName);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, SetEmail] = useState("");
   const [address, setAddress] = useState("");
@@ -57,7 +58,7 @@ function AddGuardian() {
             subClassId,
             address,
             phoneNumber,
-            password,
+            password: generatePassword(),
             status: "active",
           }),
         });
@@ -136,6 +137,29 @@ function AddGuardian() {
               </div>
             </div>
 
+            <div className="grid w-full grid-cols-2 gap-4">
+              <div className="input-group">
+                <label htmlFor="">Email</label>
+                <input
+                  value={email}
+                  onChange={(e) => SetEmail(e.target.value)}
+                  required
+                  type="email"
+                  placeholder="Email"
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="">Phone</label>
+                <input
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  required
+                  type="text"
+                  placeholder="Phone"
+                />
+              </div>
+            </div>
+
             <div className="input-group">
               <label htmlFor="">Address</label>
               <input
@@ -177,28 +201,6 @@ function AddGuardian() {
                   </span>
                   <span className="radio-btn-label">Female</span>
                 </span>
-              </div>
-            </div>
-            <div className="grid w-full grid-cols-2 gap-4">
-              <div className="input-group">
-                <label htmlFor="">Email</label>
-                <input
-                  value={email}
-                  onChange={(e) => SetEmail(e.target.value)}
-                  required
-                  type="email"
-                  placeholder="Email"
-                />
-              </div>
-              <div className="input-group">
-                <label htmlFor="">Phone</label>
-                <input
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
-                  type="text"
-                  placeholder="Phone"
-                />
               </div>
             </div>
 

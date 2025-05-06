@@ -12,23 +12,22 @@ import { getCookie } from "cookies-next/client";
 import Loader from "@/components/ux/Loader";
 import { AnimatePresence, motion } from "motion/react";
 import { motionTranstion } from "@/constants/motionTranstion";
-
+import { TOKEN_COOKIE_NAME } from "@/middleware";
+import { generatePassword } from "@/utils/generatePassword";
 
 function AddStudent() {
   const [gender, setGender] = useState("male");
   const { setStudentModalActive, studentModalActive, setStudentChange } =
     useStudentModalStore();
-  const [selectedClass, setSelectedClass] = useState("");
   const [showClassPicker, setShowClassPicker] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState(lastName);
+  const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, SetEmail] = useState("");
   const [address, setAddress] = useState("");
@@ -36,13 +35,16 @@ function AddStudent() {
   const [classId, setClassId] = useState("");
   const [enrollmentDate, setEnrollmentDate] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [accountId, setAccountId] = useState("");
+  const [studentNumber, setStudentNumber] = useState("");
+  const [mainClassName, setMainClassName] = useState("");
+  const [subClassName, setSubClassName] = useState("");
 
   const addStudent = async () => {
     setIsLoading(true);
     setIsError(false);
     setErrorMessage("");
     setIsSuccess(false);
+    setPassword(generatePassword);
 
     if (token) {
       const decodedToken: TokenTypes = jwtDecode(token);
@@ -67,9 +69,29 @@ function AddStudent() {
             password,
             enrollmentDate,
             dateOfBirth,
-            accountId,
+            studentNumber,
+            status: "active",
           }),
         });
+
+        console.log(
+          JSON.stringify({
+            firstName,
+            lastName,
+            schoolId,
+            gender,
+            email,
+            classId,
+            subClassId,
+            address,
+            phoneNumber,
+            password,
+            enrollmentDate,
+            dateOfBirth,
+            studentNumber,
+            status: "active",
+          })
+        );
 
         const data = await response.json();
 
@@ -176,17 +198,32 @@ function AddStudent() {
               </div>
             </div>
 
-            <div className="input-group">
-              <label htmlFor="">Date of birth</label>
-              <input
-                required
-                value={dateOfBirth}
-                onChange={(e) => {
-                  setDateOfBirth(e.target.value);
-                }}
-                type="date"
-                placeholder="Date of birth"
-              />
+            <div className="grid w-full grid-cols-2 gap-4">
+              <div className="input-group">
+                <label htmlFor="">Date of birth</label>
+                <input
+                  required
+                  value={dateOfBirth}
+                  onChange={(e) => {
+                    setDateOfBirth(e.target.value);
+                  }}
+                  type="date"
+                  placeholder="Date of birth"
+                />
+              </div>
+
+              <div className="input-group date-input relative">
+                <label htmlFor="">Date enrolled</label>
+                <input
+                  required
+                  value={enrollmentDate}
+                  onChange={(e) => {
+                    setEnrollmentDate(e.target.value);
+                  }}
+                  type="date"
+                  placeholder="Date enrolled"
+                />
+              </div>
             </div>
 
             <div className="input-group flex gap-2 w-full">
@@ -222,19 +259,6 @@ function AddStudent() {
               </div>
             </div>
 
-            <div className="input-group date-input relative">
-              <label htmlFor="">Date enrolled</label>
-              <input
-                required
-                value={enrollmentDate}
-                onChange={(e) => {
-                  setEnrollmentDate(e.target.value);
-                }}
-                type="date"
-                placeholder="Date enrolled"
-              />
-            </div>
-
             <div className="grid w-full grid-cols-2 gap-4">
               <div
                 style={{ position: "relative" }}
@@ -246,7 +270,7 @@ function AddStudent() {
                   type="text"
                   className="cursor-pointer"
                   placeholder="Class"
-                  value={selectedClass}
+                  value={mainClassName + " " + subClassName}
                   onClick={() => {
                     if (showClassPicker) {
                       setShowClassPicker(false);
@@ -263,7 +287,8 @@ function AddStudent() {
                     setMainClassId={setClassId}
                     setSubClassId={setsubClassId}
                     subClassId={subClassId}
-                    setSelectedClass={setSelectedClass}
+                    setMainClassName={setMainClassName}
+                    setSubClassName={setSubClassName}
                   />
                 )}
               </div>
@@ -271,9 +296,9 @@ function AddStudent() {
                 <label htmlFor="">Student number</label>
                 <input
                   required
-                  value={accountId}
+                  value={studentNumber}
                   onChange={(e) => {
-                    setAccountId(e.target.value);
+                    setStudentNumber(e.target.value);
                   }}
                   type="text"
                   placeholder="Student number or ID number"
@@ -294,8 +319,8 @@ function AddStudent() {
               />
             </div>
 
-            <div className="cta-container flex gap-2 w-full justify-end">
-            <AnimatePresence>
+            <div className="cta-container items-center flex gap-2 w-full justify-end">
+              <AnimatePresence>
                 {isError && (
                   <motion.span
                     initial={{ opacity: 0 }}
@@ -308,7 +333,7 @@ function AddStudent() {
                       paddingRight: "1rem",
                       height: "fit-content",
                     }}
-                    className="error"
+                    className="error mr-auto"
                   >
                     {errorMessage}
                   </motion.span>
@@ -326,7 +351,7 @@ function AddStudent() {
                       paddingRight: "1rem",
                       height: "fit-content",
                     }}
-                    className="success"
+                    className="success mr-auto"
                   >
                     Student has been added successfully
                   </motion.span>
@@ -336,11 +361,7 @@ function AddStudent() {
               <span onClick={setStudentModalActive} className="cta-2">
                 Cancel
               </span>
-              <span className="cta">
-                {
-                  isLoading ? <Loader /> : "Save"
-                }
-              </span>
+              <button className="cta">{isLoading ? <Loader /> : "Save"}</button>
             </div>
           </div>
         </form>

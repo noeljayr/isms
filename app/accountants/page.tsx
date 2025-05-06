@@ -14,6 +14,7 @@ import { useSearchParams } from "next/navigation";
 import { getCookie } from "cookies-next/client";
 import { StaffTypes } from "@/types/staff";
 useTeacherModalStore;
+import { TOKEN_COOKIE_NAME } from "@/middleware";
 
 function Accountants() {
   const { setTeacherModalActive } = useTeacherModalStore();
@@ -23,7 +24,7 @@ function Accountants() {
   // const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const [accountants, setAccountants] = useState<StaffTypes[]>([]);
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(

@@ -1,22 +1,46 @@
 import { StudentTypes } from "@/types/student-types";
 import Eye from "./svg/Eye";
 import useViewStudentModalStore from "@/context/modals/viewStudents";
+import Plus from "./svg/Plus";
+import StudentGuardian from "./StudentGuardian";
 
-function Student(props: StudentTypes) {
-  const {setViewStudentModalActive, viewStudentModalActive} = useViewStudentModalStore()
+function Student({student}: {student: StudentTypes}) {
+  const { setViewStudentModalActive, setViewStudentId } =
+    useViewStudentModalStore();
 
   return (
-    <div onClick={setViewStudentModalActive} key={props.id} className="tr">
-      <span className="td number student-number">{props.accountId}</span>
-      <span className="td truncate font-medium">{props.firstName} {" "} {props.lastName}  </span>
-      <span className="td flex flex-col gap-0.5 truncate">
-        {/* <span className="truncate">{props.guardian.name}</span>
-        <span className="flex gap-1.5 items-center opacity-65">
-          <span className="guardian-email">{props.guardian.email}</span>
-          <span className="opacity-50">•</span>
-          <span className="guardian-phone">{props.guardian.phone}</span>
-        </span> */}
+    <div
+      onClick={() => {
+        setViewStudentId(student.id);
+        setViewStudentModalActive();
+      }}
+      key={student.id}
+      className="tr"
+    >
+      <span className="td number student-number"></span>
+      <span className="td truncate font-medium">
+        {student.firstName} {student.lastName}{" "}
       </span>
+      {student.parentId && student.parentId.length > 0 ? (
+        <StudentGuardian parentId={student.parentId} />
+      ) : (
+        <button
+          style={{
+            padding: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            width: "1.5rem",
+            height: "1.5rem",
+            marginLeft: "0.7rem",
+          }}
+          className="cta-2"
+        >
+          <span className="opacity-50">
+            {" "}
+            <Plus />
+          </span>
+        </button>
+      )}
       <span className="td"></span>
       <span className="td action">
         <span className="action-1">

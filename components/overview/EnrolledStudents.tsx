@@ -4,6 +4,10 @@ import NumberFlow from "@number-flow/react";
 import { getDifference } from "@/utils/getDifference";
 import { useEffect, useState } from "react";
 import useActiveYearStore, { years } from "@/context/academicYears";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
+import { getCookie } from "cookies-next";
+import { useStudentModalStore } from "@/context/modals/addStudent";
+import { BASE_URL } from "@/constants/BASE_URL";
 
 type dataTyeps = {
   value: number;
@@ -41,13 +45,56 @@ function EnrolledStudents() {
     setPrevYearData(prevYear);
   }, [activeYear]);
 
+
+  const [isError, setIsError] = useState(false);
+  // const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [studentCount, setStudentCount] = useState(0);
+  const token = getCookie(TOKEN_COOKIE_NAME);
+  const { studentChange } = useStudentModalStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const getStudents = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      setErrorMessage("");
+
+      try {
+        const response = await fetch(`${BASE_URL}/students`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.status == 200) {
+          setIsLoading(false);
+          setStudentCount(data.totalCount);
+        } else {
+          setIsError(true);
+          setErrorMessage(data.title);
+        }
+      } catch (err: any) {
+        setIsError(true);
+        setErrorMessage("Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getStudents();
+  }, [studentChange]);
+
   return (
     <div className="card">
       <div className="card-title">Enrolled students</div>
       <div className="card-body flex gap-4 items-center">
         <h3>
           <NumberFlow
-            value={currentYearData?.value || 0}
+            value={studentCount || 0}
             format={{ notation: "standard", maximumFractionDigits: 2 }}
           />
         </h3>

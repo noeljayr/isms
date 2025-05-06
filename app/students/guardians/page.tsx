@@ -13,6 +13,7 @@ import { getCookie } from "cookies-next/client";
 import { BASE_URL } from "@/constants/BASE_URL";
 import { Guardian } from "@/types/guardian-types";
 import Loader from "@/components/ux/Loader";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
 
 function Guardians() {
   const { setGuardianModalActive, addGuardianChange } = useGuardianModalStore();
@@ -22,7 +23,7 @@ function Guardians() {
   // const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const [guardianData, setGuardianData] = useState<Guardian[]>([]);
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(
@@ -111,11 +112,11 @@ function Guardians() {
               guardianData.map((guardian, index) => (
                 <div key={index} className="tr">
                   <span className="td font-medium">
-                    {guardian.firstName} {guardian.LastName}
+                    {guardian.firstName} {guardian.lastName}
                   </span>
                   <span className="td truncate">{guardian.email}</span>
 
-                  <span>{guardian.phone}</span>
+                  <span>{guardian.phoneNumber}</span>
                   <span className="action">
                     <span className="action-1">
                       <Eye />

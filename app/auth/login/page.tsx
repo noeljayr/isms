@@ -11,6 +11,7 @@ import Loader from "@/components/ux/Loader";
 import { useRouter } from "next/navigation";
 import Eye from "@/components/svg/Eye";
 import EyeSlash from "@/components/svg/EyeSlash";
+import Check from "@/components/svg/Check";
 
 function Auth() {
   const [password, setPassword] = useState("");
@@ -21,6 +22,7 @@ function Auth() {
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordInput, setPasswordInput] = useState(true);
   const router = useRouter();
+  const [rememberMe, setRememberMe] = useState(false);
 
   const login = async () => {
     setIsLoading(true);
@@ -33,7 +35,11 @@ function Auth() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ password, email }),
+        body: JSON.stringify({
+          password,
+          email,
+          rememberme: rememberMe ? "on" : "",
+        }),
       });
 
       const data = await response.json();
@@ -41,7 +47,7 @@ function Auth() {
       if (response.status == 200) {
         setIsLoading(false);
         setIsSuccess(true);
-        setCookie("token", data.token);
+        setCookie("codewave_token", data.token);
         router.push("/");
       } else {
         setIsError(true);
@@ -151,6 +157,15 @@ function Auth() {
 
           <button className="cta">{isLoading ? <Loader /> : "Login"}</button>
           <div className="flex w-full">
+            <span
+              onClick={() => setRememberMe(!rememberMe)}
+              className={`checkbox-container ${rememberMe ? "checked" : ""}`}
+            >
+              <span className="checkbox">
+                <Check />
+              </span>
+              <span className="checkbox-label">Remember me</span>
+            </span>
             <span
               style={{ fontSize: "var(--p2)" }}
               className="opacity-75 ml-auto font-medium"

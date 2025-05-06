@@ -10,7 +10,7 @@ import { TokenTypes } from "@/types/token";
 import { getCookie } from "cookies-next/client";
 import { motionTranstion } from "@/constants/motionTranstion";
 useTeacherModalStore;
-
+import { TOKEN_COOKIE_NAME } from "@/middleware";
 import { AnimatePresence, motion } from "motion/react";
 import Loader from "@/components/ux/Loader";
 
@@ -18,12 +18,11 @@ function AddAccountant() {
   const [gender, setGender] = useState("male");
   const { teacherModalActive, setTeacherModalActive } = useTeacherModalStore();
 
-
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState(lastName);
@@ -85,7 +84,6 @@ function AddAccountant() {
     }
   };
 
-
   return (
     <>
       {teacherModalActive && (
@@ -97,11 +95,12 @@ function AddAccountant() {
         }`}
       >
         <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          addTeacher();
-        }}
-        className="card">
+          onSubmit={(e) => {
+            e.preventDefault();
+            addTeacher();
+          }}
+          className="card"
+        >
           <span className="card-title flex items-center">
             New teacher
             <span

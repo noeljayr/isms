@@ -7,6 +7,8 @@ import { getCookie } from "cookies-next/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
+
 
 export default function StudentsLayout({
   children,
@@ -20,7 +22,7 @@ export default function StudentsLayout({
   const [errorMessage, setErrorMessage] = useState("");
   const [studentCount, setStudentCount] = useState(0);
   const [guardianCount, setGuardianCount] = useState(0);
-  const token = getCookie("token");
+  const token = getCookie(TOKEN_COOKIE_NAME);
   const { studentChange } = useStudentModalStore();
 
   useEffect(() => {
@@ -57,7 +59,6 @@ export default function StudentsLayout({
     getStudents();
   }, [studentChange]);
 
-
   useEffect(() => {
     const getGuardians = async () => {
       setIsLoading(true);
@@ -91,7 +92,6 @@ export default function StudentsLayout({
     };
     getGuardians();
   }, [studentChange]);
-
 
   return (
     <div className="card table-card w-full mb-3 h-full">
