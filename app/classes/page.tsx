@@ -169,7 +169,7 @@ function Classes() {
               )}
             </div>
 
-            <div className="pagination pt-4">
+            <div className="pagination">
               <span className="page active">{page}</span>
             </div>
           </div>

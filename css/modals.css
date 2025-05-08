@@ -35,9 +35,7 @@
   overflow: visible;
 }
 
-.modal .card-body {
-  overflow: visible !important;
-}
+
 
 .view-modal form .cta-container {
   margin-top: auto;
@@ -73,7 +71,8 @@
   font-weight: 500;
 }
 
-.modal .input-group input {
+.modal .input-group input,
+.modal .input-group textarea {
   border: 1px solid var(--border);
   border-radius: var(--radius-s);
   padding: 0.5rem;
@@ -85,12 +84,18 @@
   font-weight: 500;
 }
 
-.modal .input-group input::placeholder {
+.modal .input-group input::placeholder,
+.modal .input-group textarea::placeholder {
   color: var(--black);
   font-size: var(--p2);
   font-weight: 500;
   opacity: 0.5;
   font-family: "Lexend", sans-serif;
+}
+
+.modal .input-group textarea{
+  height: 6rem;
+  resize: none;
 }
 
 .classes-picker,

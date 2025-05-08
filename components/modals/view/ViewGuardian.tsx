@@ -2,51 +2,46 @@
 
 import React, { useEffect, useState } from "react";
 import XClose from "../../svg/XClose";
-import useViewStudentModalStore from "@/context/modals/viewStudents";
-import { formatDate } from "@/utils/formatDate";
 import Pen from "@/components/svg/Edit";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 import { getCookie } from "cookies-next/client";
 import { BASE_URL } from "@/constants/BASE_URL";
-import { StudentTypes } from "@/types/student-types";
-import StudentGuardianView from "./StudentGuardianView";
 import Loader from "@/components/ux/Loader";
-import Link from "next/link";
+import useViewGuardiansModalStore from "@/context/modals/viewGuardians";
+import { Guardian } from "@/types/guardian-types";
+import Search from "@/components/svg/Search";
+import { TokenTypes } from "@/types/token";
+import { jwtDecode } from "jwt-decode";
 import { AnimatePresence, motion } from "motion/react";
 import { motionTranstion } from "@/constants/motionTranstion";
-import { useStudentModalStore } from "@/context/modals/addStudent";
+import useGuardianModalStore from "@/context/modals/addGuardian";
+const tabs = ["Personal Details", "Students"];
 
-const tabs = ["Student details", "Academic perfomance", "Finances"];
-
-function ViewStudent() {
-  const { setViewStudentModalActive, viewStudentModalActive, viewStudentId } =
-    useViewStudentModalStore();
-  const { setStudentChange, studentChange } = useStudentModalStore();
+function ViewGuardian() {
+  const {
+    setViewGuardianModalActive,
+    viewGuardiansId,
+    viewGuardiansModalActive,
+  } = useViewGuardiansModalStore();
+  const { setAddGuardianChange, addGuardianChange } = useGuardianModalStore();
 
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [indicatorPosition, setIndicatorPosition] = useState("");
-  const [studentData, setStudentData] = useState<StudentTypes>();
-  const [pReadyOnly, setPReadOnly] = useState(true);
+  const [guardianData, setguardianData] = useState<Guardian>();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [gender, setGender] = useState("");
-  const [email, SetEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [subClassId, setsubClassId] = useState("");
-  const [classId, setClassId] = useState("");
-  const [enrollmentDate, setEnrollmentDate] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [studentNumber, setStudentNumber] = useState("");
-  const [mainClassName, setMainClassName] = useState("");
-  const [subClassName, setSubClassName] = useState("");
   const [isEditError, setEditError] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const token = getCookie(TOKEN_COOKIE_NAME);
+  const [search, setSearch] = useState("");
+  const [pReadyOnly, setPReadOnly] = useState(true);
+  const [firstName, setFirstName] = useState<string | undefined>("");
+  const [lastName, setLastName] = useState<string | undefined>("");
+  const [phoneNumber, setPhoneNumber] = useState<string | undefined>("");
+  const [email, SetEmail] = useState<string | undefined>("");
+  const [address, setAddress] = useState<string | undefined>("");
+  const [gender, setGender] = useState<string | undefined>("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     const index = tabs.indexOf(activeTab);
@@ -59,10 +54,10 @@ function ViewStudent() {
       setIsError(false);
       setErrorMessage("");
 
-      if (viewStudentId && viewStudentId.length > 0) {
+      if (viewGuardiansId && viewGuardiansId.length > 0) {
         try {
           const response = await fetch(
-            `${BASE_URL}/students/${viewStudentId}`,
+            `${BASE_URL}/Guardians/${viewGuardiansId}`,
             {
               method: "GET",
               headers: {
@@ -76,7 +71,7 @@ function ViewStudent() {
 
           if (response.status == 200) {
             setIsLoading(false);
-            setStudentData(data.data);
+            setguardianData(data.data);
           } else {
             setIsError(true);
             setErrorMessage(data.title);
@@ -90,37 +85,29 @@ function ViewStudent() {
       }
     };
     getStudents();
-  }, [viewStudentId,studentChange]);
+  }, [viewGuardiansId, addGuardianChange]);
 
   useEffect(() => {
-    if (studentData) {
-      setFirstName(studentData.firstName);
-      setLastName(studentData.lastName);
-      SetEmail(studentData.email);
-      setAddress(studentData.address);
-      setPhoneNumber(studentData.phoneNumber);
-      setDateOfBirth(studentData.dateOfBirth);
-      setEnrollmentDate(studentData.enrollmentDate);
-      setGender(studentData.gender);
+    if (guardianData) {
+      setFirstName(guardianData.firstName);
+      setLastName(guardianData.lastName);
+      SetEmail(guardianData.email);
+      setAddress(guardianData.address);
+      setPhoneNumber(guardianData.phoneNumber);
     }
-  }, [studentData]);
+  }, [guardianData]);
 
   useEffect(() => {
     if (!pReadyOnly) {
-      if (studentData) {
-        setFirstName(studentData.firstName);
-        setLastName(studentData.lastName);
-        SetEmail(studentData.email);
-        setAddress(studentData.address);
-        setPhoneNumber(studentData.phoneNumber);
-        setDateOfBirth(studentData.dateOfBirth);
-        setEnrollmentDate(studentData.enrollmentDate);
-        setGender(studentData.gender);
-      }
+      setFirstName(guardianData?.firstName);
+      setLastName(guardianData?.lastName);
+      SetEmail(guardianData?.email);
+      setAddress(guardianData?.address);
+      setPhoneNumber(guardianData?.phoneNumber);
     }
   }, [pReadyOnly]);
 
-  const editStudent = async () => {
+  const editGuardian = async () => {
     setIsLoading(true);
     setEditError(false);
     setErrorMessage("");
@@ -128,29 +115,32 @@ function ViewStudent() {
 
     if (token) {
       try {
-        const response = await fetch(`${BASE_URL}/students/${viewStudentId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            id: viewStudentId,
-            firstName,
-            lastName,
-            gender,
-            email,
-            address,
-            phoneNumber,
-          }),
-        });
+        const response = await fetch(
+          `${BASE_URL}/Guardians/${viewGuardiansId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: viewGuardiansId,
+              firstName,
+              lastName,
+              gender,
+              email,
+              address,
+              phoneNumber,
+            }),
+          }
+        );
 
         const data = await response.json();
 
         if (response.status == 200) {
           setIsLoading(false);
           setIsSuccess(true);
-          setStudentChange();
+          setAddGuardianChange()
         } else {
           setEditError(true);
           setErrorMessage(data.title);
@@ -169,25 +159,25 @@ function ViewStudent() {
 
   return (
     <>
-      {viewStudentModalActive && (
+      {viewGuardiansModalActive && (
         <div className="modal-overlay fixed h-screen w-screen left-0 top-0"></div>
       )}
       <div
         className={`modal view-modal ${
-          viewStudentModalActive ? "modal-active view-modal-active" : ""
+          viewGuardiansModalActive ? "modal-active view-modal-active" : ""
         } fixed h-screen w-screen left-0 top-0 flex items-start p-1.5 justify-end`}
       >
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            editStudent();
+            editGuardian();
           }}
           className="card relative"
         >
           <span className="card-title flex items-center">
             Student information
             <span
-              onClick={setViewStudentModalActive}
+              onClick={setViewGuardianModalActive}
               title="discard"
               className="close ml-auto"
             >
@@ -195,39 +185,12 @@ function ViewStudent() {
             </span>
           </span>
 
-          {studentData && (
+          {guardianData && (
             <>
               <div
                 style={{ overflow: "hidden" }}
                 className="card-body modal-content grid gap-4"
               >
-                <div className="section gap-1">
-                  <span className="student-name font-medium">
-                    {studentData.firstName + " " + studentData.lastName}
-                  </span>
-                  <div className="student-overview w-full justify-between flex gap-2 items-center">
-                    <span className="flex opacity-75 number">
-                      # {studentData.studentNumber}
-                    </span>
-
-                    <span className="font-bold opacity-25">•</span>
-
-                    <span className="flex opacity-75"></span>
-
-                    <span className="font-bold opacity-25">•</span>
-
-                    <span className="attendance-rate number opacity-75">
-                      95% Attandance rate
-                    </span>
-
-                    <span className="font-bold opacity-25">•</span>
-
-                    <span className={`status ${studentData.status}-status`}>
-                      {studentData.status}
-                    </span>
-                  </div>
-                </div>
-
                 <div className="tabs relative">
                   <span
                     style={{ left: indicatorPosition }}
@@ -246,17 +209,18 @@ function ViewStudent() {
                   ))}
                 </div>
 
-                {activeTab == "Student details" && (
+                {activeTab == "Personal Details" && (
                   <>
                     {isLoading ? (
                       <div className="absolute inset-0 self-center translate-[50%]">
+                        {" "}
                         <Loader variant="primary" />
                       </div>
                     ) : isError ? (
                       <div className="error">Something went wrong</div>
-                    ) : studentData ? (
+                    ) : guardianData ? (
                       <>
-                        <div className="grid grid-cols-1 grid-rows-[auto_auto] pb-2 gap-4 h-full overflow-y-auto">
+                        <div className="flex flex-col gap-4 h-full overflow-y-auto">
                           <div className="section gap-2 relative">
                             <span
                               onClick={() => setPReadOnly(!pReadyOnly)}
@@ -276,7 +240,6 @@ function ViewStudent() {
                                   readOnly={pReadyOnly}
                                   value={firstName}
                                   className="number"
-                                  type="text"
                                   onChange={(e) => setFirstName(e.target.value)}
                                 />
                               </div>
@@ -289,52 +252,7 @@ function ViewStudent() {
                                   readOnly={pReadyOnly}
                                   value={lastName}
                                   className="number"
-                                  type="text"
                                   onChange={(e) => setLastName(e.target.value)}
-                                />
-                              </div>
-
-                              <div className="flex flex-col">
-                                <span className="font-medium opacity-65">
-                                  Gender
-                                </span>
-                                <input
-                                  readOnly={pReadyOnly}
-                                  value={gender}
-                                  className="number"
-                                  type="text"
-                                  onChange={(e) => setGender(e.target.value)}
-                                />
-                              </div>
-
-                              <div className="flex flex-col">
-                                <span className="font-medium opacity-65">
-                                  Date of birth
-                                </span>
-                                <input
-                                  readOnly={pReadyOnly}
-                                  value={formatDate(dateOfBirth)}
-                                  className="number"
-                                  type={pReadyOnly ? "text": "date"}
-                                  onChange={(e) =>
-                                    setDateOfBirth(e.target.value)
-                                  }
-                                />
-                              </div>
-
-                              <div className="flex flex-col">
-                                <span className="font-medium opacity-65">
-                                  Date enrolled
-                                </span>
-
-                                <input
-                                  readOnly={pReadyOnly}
-                                  value={formatDate(enrollmentDate)}
-                                  onChange={(e) =>
-                                    setEnrollmentDate(e.target.value)
-                                  }
-                                  className="number"
-                                  type={pReadyOnly ? "text": "date"}
                                 />
                               </div>
 
@@ -346,7 +264,6 @@ function ViewStudent() {
                                   readOnly={pReadyOnly}
                                   value={email}
                                   className="number"
-                                  type="text"
                                   onChange={(e) => SetEmail(e.target.value)}
                                 />
                               </div>
@@ -355,12 +272,10 @@ function ViewStudent() {
                                 <span className="font-medium opacity-65">
                                   Phone
                                 </span>
-
                                 <input
                                   readOnly={pReadyOnly}
                                   value={phoneNumber}
                                   className="number"
-                                  type="text"
                                   onChange={(e) =>
                                     setPhoneNumber(e.target.value)
                                   }
@@ -371,37 +286,43 @@ function ViewStudent() {
                                 <span className="font-medium opacity-65">
                                   Address
                                 </span>
-
                                 <input
                                   readOnly={pReadyOnly}
-                                  value={address}
+                                  value={guardianData.address}
                                   className="number"
-                                  type="text"
                                   onChange={(e) => setAddress(e.target.value)}
                                 />
                               </div>
                             </div>
                           </div>
-
-                          <div className="section gap-2 relative">
-                            <Link
-                              href="/students/guardians/"
-                              className="edit-btn flex items-center justify-center absolute right-2 top-2"
-                            >
-                              Edit <Pen />
-                            </Link>
-                            <span className="student-name font-medium">
-                              Guardian
-                            </span>
-                            <StudentGuardianView
-                              parentId={studentData.parentId}
-                            />
-                          </div>
                         </div>
                       </>
                     ) : (
-                      <div>Student not found</div>
+                      <div>Guardian not found</div>
                     )}
+                  </>
+                )}
+
+                {activeTab == "Students" && (
+                  <>
+                    <div
+                      style={{ position: "relative" }}
+                      className="search input-group mr-auto"
+                    >
+                      <span className="absolute left-2 top-[0.7rem]">
+                        <Search />
+                      </span>
+                      <input
+                        readOnly={pReadyOnly}
+                        style={{
+                          paddingLeft: "1.5rem",
+                        }}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        type="text"
+                        placeholder="Search for student..."
+                      />
+                    </div>
                   </>
                 )}
 
@@ -439,12 +360,12 @@ function ViewStudent() {
                         }}
                         className="success mr-auto"
                       >
-                        Student updated successfully.
+                        Guardian updated successfully.
                       </motion.span>
                     )}
                   </AnimatePresence>
 
-                  <span onClick={setViewStudentModalActive} className="cta-2">
+                  <span onClick={setViewGuardianModalActive} className="cta-2">
                     Cancel
                   </span>
                   <button
@@ -465,4 +386,4 @@ function ViewStudent() {
   );
 }
 
-export default ViewStudent;
+export default ViewGuardian;

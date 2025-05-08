@@ -14,6 +14,8 @@ import { BASE_URL } from "@/constants/BASE_URL";
 import { Guardian } from "@/types/guardian-types";
 import Loader from "@/components/ux/Loader";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
+import useViewGuardiansModalStore from "@/context/modals/viewGuardians";
+import ViewGuardian from "@/components/modals/view/ViewGuardian";
 
 function Guardians() {
   const { setGuardianModalActive, addGuardianChange } = useGuardianModalStore();
@@ -22,6 +24,8 @@ function Guardians() {
   const [isError, setIsError] = useState(false);
   // const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { setViewGuardianModalActive, setViewGuardiansId } =
+    useViewGuardiansModalStore();
 
   const token = getCookie(TOKEN_COOKIE_NAME);
   const [guardianData, setGuardianData] = useState<Guardian[]>([]);
@@ -110,7 +114,14 @@ function Guardians() {
               </div>
             ) : guardianData.length > 0 ? (
               guardianData.map((guardian, index) => (
-                <div key={index} className="tr">
+                <div
+                  onClick={() => {
+                    setViewGuardiansId(guardian.id);
+                    setViewGuardianModalActive();
+                  }}
+                  key={index}
+                  className="tr"
+                >
                   <span className="td font-medium">
                     {guardian.firstName} {guardian.lastName}
                   </span>
@@ -140,6 +151,7 @@ function Guardians() {
       </div>
 
       <AddGuardian />
+      <ViewGuardian />
     </>
   );
 }

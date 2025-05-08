@@ -13,10 +13,11 @@ useTeacherModalStore;
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 import { AnimatePresence, motion } from "motion/react";
 import Loader from "@/components/ux/Loader";
+import { generatePassword } from "@/utils/generatePassword";
 
 function AddTeacher() {
   const [gender, setGender] = useState("male");
-  const { teacherModalActive, setTeacherModalActive } = useTeacherModalStore();
+  const { teacherModalActive, setTeacherModalActive, setAddTeacherChange } = useTeacherModalStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -25,7 +26,6 @@ function AddTeacher() {
   const token = getCookie(TOKEN_COOKIE_NAME);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState(lastName);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, SetEmail] = useState("");
   const [address, setAddress] = useState("");
@@ -41,8 +41,9 @@ function AddTeacher() {
     if (token) {
       const decodedToken: TokenTypes = jwtDecode(token);
       const schoolId = decodedToken.SchoolId;
+
       try {
-        const response = await fetch(`${BASE_URL}/Guardians`, {
+        const response = await fetch(`${BASE_URL}/teachers`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +59,7 @@ function AddTeacher() {
             subClassId,
             address,
             phoneNumber,
-            password,
+            password: generatePassword(),
             status: "active",
           }),
         });
@@ -68,6 +69,7 @@ function AddTeacher() {
         if (response.status == 201) {
           setIsLoading(false);
           setIsSuccess(true);
+          setAddTeacherChange();
         } else {
           setIsError(true);
           setErrorMessage(data.title);
@@ -201,6 +203,9 @@ function AddTeacher() {
                 />
               </div>
             </div>
+
+
+            
 
             <div className="cta-container flex gap-2 w-full justify-end items-center">
               <AnimatePresence>

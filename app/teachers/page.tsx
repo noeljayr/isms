@@ -20,7 +20,7 @@ import Loader from "@/components/ux/Loader";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 
 function Teachers() {
-  const { setTeacherModalActive } = useTeacherModalStore();
+  const { setTeacherModalActive, addTeacherChange } = useTeacherModalStore();
   const { setImportTeachersModalActive } = useImportTeachesrModalStore();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,7 @@ function Teachers() {
       }
     };
     getTeachers();
-  }, []);
+  }, [addTeacherChange]);
 
   return (
     <>

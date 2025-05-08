@@ -89,7 +89,7 @@ function Accountants() {
 
             <div className="search input-group mr-auto">
               <Search />
-              <input type="text" placeholder="Search for a teacher..." />
+              <input type="text" placeholder="Search for an accountant..." />
             </div>
           </div>
 
