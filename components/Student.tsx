@@ -1,12 +1,29 @@
-import { StudentTypes } from "@/types/student-types";
-import Eye from "./svg/Eye";
-import useViewStudentModalStore from "@/context/modals/viewStudents";
-import Plus from "./svg/Plus";
-import StudentGuardian from "./StudentGuardian";
+"use client";
 
-function Student({student}: {student: StudentTypes}) {
+import { StudentTypes } from "@/types/StudentTypes";
+import Eye from "./svg/Eye";
+import useViewStudentModalStore from "@/context/modals/students/viewStudents";
+import Plus from "./svg/Plus";
+import StudentGuardian from "./modals/students/StudentGuardian";
+import { useEffect, useState } from "react";
+import { ClassTypes } from "@/types/ClassesTypes";
+import { getStudents } from "@/api/students";
+
+function Student({ student, index }: { student: StudentTypes; index: number }) {
+  const [studentData, setStudentData] = useState<StudentTypes>();
+
   const { setViewStudentModalActive, setViewStudentId } =
     useViewStudentModalStore();
+
+  useEffect(() => {
+    getStudents({
+      id: student.id,
+      setData: setStudentData,
+      setIsLoading: () => {},
+      setIsError: () => {},
+      setErrorMessage: () => {},
+    });
+  }, []);
 
   return (
     <div
@@ -17,7 +34,7 @@ function Student({student}: {student: StudentTypes}) {
       key={student.id}
       className="tr"
     >
-      <span className="td number student-number"></span>
+      <span className="td number student-number">{index}</span>
       <span className="td truncate font-medium">
         {student.firstName} {student.lastName}{" "}
       </span>
@@ -41,7 +58,26 @@ function Student({student}: {student: StudentTypes}) {
           </span>
         </button>
       )}
-      <span className="td"></span>
+      {studentData && studentData.class && (
+        <>
+          <span className="td">
+            {studentData.class.name}{" "}
+            {studentData.subClass && <>{studentData.subClass.name}</>}
+          </span>
+
+          <span
+            style={{ display: "flex" }}
+            className={`td gap-2 ${
+              studentData.status ? studentData.status.toLowerCase() : "default"
+            }-status`}
+          >
+            <span className="status-label font-p-3 font-medium flex items-center gap-1">
+              {studentData.status}
+            </span>
+          </span>
+        </>
+      )}
+
       <span className="td action">
         <span className="action-1">
           <Eye />

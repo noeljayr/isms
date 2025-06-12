@@ -1,0 +1,16 @@
+.mandotory svg path {
+  stroke-width: 0;
+}
+
+.subject {
+  transition: var(--transition);
+}
+
+.subject:hover {
+  filter: brightness(98%);
+}
+
+
+.today-calendar{
+  color: var(--primary)
+}

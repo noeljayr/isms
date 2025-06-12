@@ -81,7 +81,7 @@ const options: ChartOptions<"line"> = {
   },
   scales: {
     y: {
-      beginAtZero: true,
+      beginAtZero: false,
       ticks: {
         callback: (value) => {
           // format axis ticks to k/M

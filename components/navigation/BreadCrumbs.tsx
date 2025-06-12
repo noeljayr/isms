@@ -21,7 +21,7 @@ function BreadCrumbs() {
   if (pathname.startsWith("/auth")) {
     return <></>;
   }
-  
+
   return (
     <div className="bread-crumbs opacity-75 flex items-center gap-2">
       <span
@@ -72,7 +72,8 @@ function BreadCrumbs() {
         <></>
       )}
 
-      {pathname === "/students/guardians" || pathname === "/students/guardians" ? (
+      {pathname === "/students/guardians" ||
+      pathname === "/students/guardians" ? (
         <>
           <ChevronRight />
           <Link href="/students" className="flex items-center gap-1">
@@ -86,7 +87,45 @@ function BreadCrumbs() {
             Guardians
           </Link>
         </>
-      ): <></>}
+      ) : (
+        <></>
+      )}
+
+      {pathname.startsWith("/teachers") ? (
+        <>
+          <ChevronRight />
+          <Link href="/teachers" className="flex items-center gap-1">
+            <Users3 />
+            Teachers
+          </Link>
+        </>
+      ) : (
+        <></>
+      )}
+
+      {pathname.startsWith("/accountants") ? (
+        <>
+          <ChevronRight />
+          <Link href="/accountants" className="flex items-center gap-1">
+            <Users3 />
+            Accountants
+          </Link>
+        </>
+      ) : (
+        <></>
+      )}
+
+      {pathname.startsWith("/events") ? (
+        <>
+          <ChevronRight />
+          <Link href="/events" className="flex items-center gap-1">
+            <Calendar />
+            Events
+          </Link>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

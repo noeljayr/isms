@@ -1,6 +1,13 @@
+
 .links svg {
   height: 1rem;
   width: 1rem;
+}
+
+.links .tabler-icon{
+  height: 1.3rem;
+  width: 1rem;
+
 }
 
 .submenu {
@@ -13,10 +20,16 @@
   padding-bottom: 0.5rem;
   gap: 1rem;
   position: relative;
-  overflow: hidden;
   border-radius: var(--radius-s);
   transition: var(--transiton);
 }
+
+.links{
+  height: 100%;
+}
+/* .links .link:last-child{
+  margin-top: auto;
+} */
 
 .links * {
   font-size: var(--p2);
@@ -25,7 +38,7 @@
 
 .links .link::after {
   content: "";
-  height: 50%;
+  height: 45%;
   position: absolute;
   width: 5px;
   border-radius: 10px;

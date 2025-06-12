@@ -1,7 +1,7 @@
 export const ChartOptions = {
-  cutout: "85%",
-  offset: 5,
-  borderRadius: 2,
+  cutout: "65%",
+  offset: 10,
+  borderRadius: 7,
   plugins: {
     legend: {
       display: false,

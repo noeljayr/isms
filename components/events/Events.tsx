@@ -1,125 +1,111 @@
 "use client";
 
 import "@/css/events.css";
-import { events } from "@/data/events";
+
 import Event from "./Event";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useEventModalStore from "@/context/modals/addEvent";
-import { getCookie } from "cookies-next/client";
-import { TOKEN_COOKIE_NAME } from "@/middleware";
-import { EventTypes } from "@/types/event-types";
-import { useSearchParams } from "next/navigation";
-import { BASE_URL } from "@/constants/BASE_URL";
-import Calendar from "../svg/Calendar";
-import { formatDate } from "@/utils/formatDate";
+import { EventTypes } from "@/types/EventsTypes";
 import Loader from "../ux/Loader";
+import { AnimatePresence, motion } from "motion/react";
+import Plus from "../svg/Plus";
+import Search from "../svg/Search";
+import { getEvents } from "@/api/events";
+import AddEvent from "../modals/events/AddEvent";
+import { motionTranstion } from "@/constants/motionTranstion";
+import { token } from "@/app/auth/token";
 
 function Events() {
-  const [timelineHieght, setTimelineHeight] = useState(0);
-  const eventlistRef = useRef<HTMLDivElement>(null);
-  const { addEventChange, setEventModalActive } =
-  useEventModalStore();
+  const { addEventChange, setEventModalActive } = useEventModalStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const token = getCookie(TOKEN_COOKIE_NAME);
   const [eventsData, setEventsData] = useState<EventTypes[]>([]);
-  const searchParams = useSearchParams();
+  const [search, setSearch] = useState("");
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
-    if (eventlistRef.current) {
-      const height = eventlistRef.current.offsetHeight;
-      setTimelineHeight(height);
-    }
-  });
-
+    getEvents({
+      setData: setEventsData,
+      setErrorMessage,
+      setIsError,
+      setIsLoading,
+      search,
+    });
+  }, [addEventChange, search]);
 
   useEffect(() => {
-      const getEvents = async () => {
-        setIsLoading(true);
-        setIsError(false);
-        setErrorMessage("");
-  
-        try {
-          const response = await fetch(
-            `${BASE_URL}/Event`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-  
-          const data = await response.json();
-  
-          if (response.status == 200) {
-            setIsLoading(false);
-            setEventsData(data.data);
-          } else {
-            setIsError(true);
-            setErrorMessage(data.title);
-          }
-        } catch (err: any) {
-          setIsError(true);
-          setErrorMessage("Something went wrong");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      getEvents();
-    }, [addEventChange]);
-  
+    if (!token) return;
+    setUserRole(token.role);
+  }, [token]);
 
   return (
-    <div className="events card">
-      <div className="card-title">This term's events</div>
-      <div className="card-body h-full w-full">
-        <div
-          ref={eventlistRef}
-          className="event-list w-full grid gap-2 relative"
-        >
-          <span
-            style={{ height: timelineHieght }}
-            className="timeline absolute left-0.5"
-          ></span>
-          {isLoading ? (
-                <div className="h-[5rem] w-[5rem] flex m-auto items-center justify-center">
-                  <Loader variant="primary" />
-                </div>
-              ) : isError ? (
-                <div className="h-[5rem] w-fit flex m-auto items-center justify-center">
-                  <span className="error">{errorMessage}</span>
-                </div>
-              ) : eventsData.length > 0 ? (
-                eventsData.map((event, index) => (
-                  <div key={index} className="event p-2 py-3 flex  flex-col gap-1">
-                    <div className="w-full flex flex-col gap-1 truncate">
-                      <span className="event-title truncate font-medium">
-                        {event.title}
-                      </span>
-                      <span className="date flex opacity-50 gap-2 items-center">
-                        <Calendar />
-                        <span className="date-text number">
-                          {formatDate(event.fromDate)} -{" "}
-                          {formatDate(event.toDate)}
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div
-                  style={{ fontSize: "var(--p3)" }}
-                  className="h-[5rem]  opacity-75 w-fit flex m-auto items-center justify-center"
-                >
-                  No events found
-                </div>
-              )}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={motionTranstion}
+      className="events overflow-hiddent grid h-full grid-rows-[auto_1fr] gap-1"
+    >
+      <motion.div
+        className={`grid gap-3 ${
+          userRole.toLowerCase() == "admin"
+            ? "grid-cols-[auto_1fr]"
+            : "grid-cols-1"
+        }`}
+      >
+        {userRole.toLowerCase() === "admin" && (
+          <motion.div
+            onClick={setEventModalActive}
+            layout
+            transition={motionTranstion}
+            className="h-full add-event-btn flex items-center justify-center gap-2 font-p-2 p-2 bg-[var(--white)] border-[1px] border-[var(--border)] border-dashed rounded-[var(--radius)] cursor-pointer bg-[var(--white)]"
+          >
+            <Plus />
+          </motion.div>
+        )}
+        <div className="search-event grid gap-2 grid-rows-[1fr_auto] items-center rounded-[var(--radius-s)] border-[1px] border-[var(--border)] relative p-2 h-[2rem] w-full">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            className="font-p-2 font-semibold"
+            placeholder="Search for events..."
+          />
+          <span className="absolute right-2 opacity-75">
+            <Search />
+          </span>
         </div>
+      </motion.div>
+      <div className="flex flex-col h-full overflow-y-auto gap-1 hide-scrollbar rounded-[var(--radius-m)]">
+        {isLoading ? (
+          <div className="h-[5rem] w-[5rem] flex m-auto items-center justify-center">
+            <Loader variant="primary" />
+          </div>
+        ) : isError ? (
+          <div className="h-[5rem] w-fit flex m-auto items-center justify-center">
+            <span className="error">{errorMessage}</span>
+          </div>
+        ) : eventsData.length > 0 ? (
+          eventsData.map((event, index) => (
+            <AnimatePresence mode="wait">
+              <Event key={index} index={index} event={event} />
+            </AnimatePresence>
+          ))
+        ) : (
+          <div
+            style={{ fontSize: "var(--p3)" }}
+            className="h-[5rem]  opacity-75 w-fit flex m-auto items-center justify-center"
+          >
+            No events found
+          </div>
+        )}
       </div>
-    </div>
+
+      <AddEvent />
+    </motion.div>
   );
 }
 

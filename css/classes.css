@@ -1,9 +1,36 @@
-.classes-table{
-    grid-template-rows: auto 1fr;
+.classes-table {
+  grid-template-rows: auto 1fr;
 }
 
 .classes-table .table-header,
-.classes-table .tr{
-    grid-template-columns: 1fr 1fr 1fr 1fr 2rem;
+.classes-table .tr {
+  grid-template-columns: 1fr 1fr 7rem 7rem 2rem;
 }
 
+
+.subclass{
+  background-color: var(--white);
+  transition: var(--transition);
+}
+
+.subclass:hover{
+  filter: brightness(0.95);
+}
+.subclass svg, .subclass-input  svg{
+  height: 0.85rem;
+  width: 0.85rem;
+  opacity: 0.5;
+}
+
+.subclass-input input{
+  border: 0;
+  background-color: transparent;
+}
+
+.subclass-input  button svg{
+  opacity: 1;
+}
+
+.subclass-input  button svg path{
+  stroke: var(--white);
+}

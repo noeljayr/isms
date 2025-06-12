@@ -1,14 +1,14 @@
 "use client";
 
 import Check from "@/components/svg/Check";
-import { BASE_URL } from "@/constants/BASE_URL";
-import { useStudentModalStore } from "@/context/modals/addStudent";
-import { getCookie } from "cookies-next/client";
+import { useStudentModalStore } from "@/context/modals/students/addStudent";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { TOKEN_COOKIE_NAME } from "@/middleware";
-
+import { getStudents } from "@/api/students";
+import { getGuardians } from "@/api/guardians";
+import { Guardian } from "@/types/GuardianTypes";
+import { StudentTypes } from "@/types/StudentTypes";
 
 export default function StudentsLayout({
   children,
@@ -18,84 +18,46 @@ export default function StudentsLayout({
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  // const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [studentCount, setStudentCount] = useState(0);
   const [guardianCount, setGuardianCount] = useState(0);
-  const token = getCookie(TOKEN_COOKIE_NAME);
   const { studentChange } = useStudentModalStore();
+  const [guardians, setGuardians] = useState<Guardian[]>();
+  const [students, setStudents] = useState<StudentTypes[]>([]);
 
   useEffect(() => {
-    const getStudents = async () => {
-      setIsLoading(true);
-      setIsError(false);
-      setErrorMessage("");
+    getStudents({
+      setData: setStudents,
+      setErrorMessage,
+      setIsLoading,
+      setIsError,
+      pageSize: 5000000,
+    });
 
-      try {
-        const response = await fetch(`${BASE_URL}/students`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await response.json();
-
-        if (response.status == 200) {
-          setIsLoading(false);
-          setStudentCount(data.totalCount);
-        } else {
-          setIsError(true);
-          setErrorMessage(data.title);
-        }
-      } catch (err: any) {
-        setIsError(true);
-        setErrorMessage("Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getStudents();
+    getGuardians({
+      setData: setGuardians,
+      setErrorMessage,
+      setIsLoading,
+      setIsError,
+      pageSize: 5000000,
+    });
   }, [studentChange]);
 
   useEffect(() => {
-    const getGuardians = async () => {
-      setIsLoading(true);
-      setIsError(false);
-      setErrorMessage("");
+    if (students) {
+      setStudentCount(students.length);
+    }
+  }, [students]);
 
-      try {
-        const response = await fetch(`${BASE_URL}/Guardians`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await response.json();
-
-        if (response.status == 200) {
-          setIsLoading(false);
-          setGuardianCount(data.totalCount);
-        } else {
-          setIsError(true);
-          setErrorMessage(data.title);
-        }
-      } catch (err: any) {
-        setIsError(true);
-        setErrorMessage("Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getGuardians();
-  }, [studentChange]);
+  useEffect(() => {
+    if (guardians) {
+      setGuardianCount(guardians.length);
+    }
+  }, [guardians]);
 
   return (
-    <div className="card table-card w-full mb-3 h-full">
-      <div className="card-title">
+    <div className="grid grid-rows-[auto_1fr] overflow-hidden  gap-2 h-full py-3">
+      <div className="page-tabs p-2 bg-[var(--background)] w-fit rounded-[var(--radius-s)]">
         <div className="checkboxes flex items-center gap-3">
           <Link
             href="/students"
@@ -125,7 +87,9 @@ export default function StudentsLayout({
           </Link>
         </div>
       </div>
-      <div className="card-body w-full h-full">{children}</div>
+      <div className="w-full h-full relative gap-3 grid grid-rows-[auto_1fr_auto]">
+        {children}
+      </div>
     </div>
   );
 }

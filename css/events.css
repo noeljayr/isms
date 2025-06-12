@@ -2,13 +2,9 @@
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
+  width: 100%;
 }
 
-.events .card-body {
-  height: 100%;
-  overflow: hidden;
-  padding-left: 0;
-}
 
 .events .event-list {
   display: grid;
@@ -22,23 +18,11 @@
 
 .event {
   background-color: var(--background-2);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-m);
   border: 1px solid var(--border);
   position: relative;
-  width: calc( 100% - 1rem);
-  margin-left: 1rem;
+  width: 100%;
   justify-content: center;
-}
-
-.event::before {
-  content: "";
-  height: 1rem;
-  width: 1rem;
-  position: absolute;
-  background-color: var(--primary);
-  border-radius: 50%;
-  border: 5px solid var(--white);
-  left: -1.35rem;
 }
 
 .event svg {
@@ -62,4 +46,27 @@
     rgba(173, 177, 255, 0) 100%
   );
   left: 0.65rem;
+}
+
+.add-event-btn svg,
+.search-event svg {
+  height: 1rem;
+  width: 1rem;
+  opacity: 0.75;
+}
+
+.add-event-btn {
+  transition: var(--transition);
+}
+.add-event-btn:hover {
+  filter: brightness(96%);
+}
+
+
+.event-actions .edit-action:hover svg path{
+  stroke: var(--primary);
+}
+
+.event-actions .delete-action:hover svg path{
+  stroke: red;
 }

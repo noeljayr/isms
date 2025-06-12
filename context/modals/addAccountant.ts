@@ -1,27 +1,27 @@
 import { create } from "zustand";
 
-interface AddTeacherModalState {
-  teacherModalActive: boolean;
-  setTeacherModalActive: () => void;
+interface AddAccountantModalState {
+  accountantModalActive: boolean;
+  setAddAccountantModalActive: () => void;
 }
 
-export const useTeacherModalStore = create<AddTeacherModalState>((set) => ({
-  teacherModalActive: false,
-  setTeacherModalActive: () =>
-    set((state) => ({ teacherModalActive: !state.teacherModalActive })),
+export const useAccountantModalStore = create<AddAccountantModalState>((set) => ({
+  accountantModalActive: false,
+  setAddAccountantModalActive: () =>
+    set((state) => ({ accountantModalActive: !state.accountantModalActive })),
 }));
 
-interface ImportTeachersModalState {
-  importTeachersModalActive: boolean;
-  setImportTeachersModalActive: () => void;
+interface ImportAccountantsModalState {
+  importAccountantModalActive: boolean;
+  setImportAccountantModalActive: () => void;
 }
 
-export const useImportTeachesrModalStore = create<ImportTeachersModalState>(
+export const useImportAccountantModalStore = create<ImportAccountantsModalState>(
   (set) => ({
-    importTeachersModalActive: false,
-    setImportTeachersModalActive: () =>
+    importAccountantModalActive: false,
+    setImportAccountantModalActive: () =>
       set((state) => ({
-        importTeachersModalActive: !state.importTeachersModalActive,
+        importAccountantModalActive: !state.importAccountantModalActive,
       })),
   })
 );

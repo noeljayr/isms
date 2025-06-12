@@ -4,20 +4,17 @@ import Plus from "@/components/svg/Plus";
 import Search from "@/components/svg/Search";
 import "@/css/students.css";
 import Accountant from "@/components/Accountant";
-import accountants from "@/data/accountants";
-import AddTeacher from "@/components/modals/upload/teachers/AddTeacher";
-import { useTeacherModalStore } from "@/context/modals/addTeacher";
-import FileUpload from "@/components/svg/FileUpload";
 import { BASE_URL } from "@/constants/BASE_URL";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getCookie } from "cookies-next/client";
-import { StaffTypes } from "@/types/staff";
-useTeacherModalStore;
+import { StaffTypes } from "@/types/StaffTypes";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
+import { useAccountantModalStore } from "@/context/modals/addAccountant";
+import AddAccountant from "@/components/modals/accountants/AddAccountant";
 
 function Accountants() {
-  const { setTeacherModalActive } = useTeacherModalStore();
+  const { setAddAccountantModalActive } = useAccountantModalStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -73,60 +70,53 @@ function Accountants() {
 
   return (
     <>
-      <div className="card table-card">
-        <span className="card-title">Accountants</span>
-        <div className="card-body flex flex-col gap-2 w-full overflow-hidden">
-          <div className="flex gap-3 items-center w-full">
-            <button onClick={setTeacherModalActive} className="cta">
-              <Plus />
-              Accountant
-            </button>
+      <div className="grid grid-rows-[auto_1fr_auto] overflow-hidden  gap-2 h-full py-3">
+        <div className="flex gap-3 items-center w-full">
+          <button onClick={setAddAccountantModalActive} className="cta">
+            <Plus />
+            Accountant
+          </button>
 
-            <button onClick={() => {}} className="cta-2">
-              <FileUpload />
-              Import accountants
-            </button>
-
-            <div className="search input-group mr-auto">
-              <Search />
-              <input type="text" placeholder="Search for an accountant..." />
-            </div>
+          <div className="search input-group mr-auto">
+            <Search />
+            <input type="text" placeholder="Search for an accountant..." />
           </div>
+        </div>
 
-          <div className="table teachers-table h-full">
-            <div className="table-header">
-              <div className="th">#</div>
-              <div className="th">Name</div>
-              <div className="th">Phone</div>
-              <div className="th">Email</div>
-              <div className="th">Status</div>
-            </div>
-            <div className="table-body hide-scrollbar">
-              {accountants.map((accountant, index) => (
-                <Accountant
-                  id={index.toString()}
-                  key={index}
-                  lastName={accountant.lastName}
-                  firstName={accountant.firstName}
-                  address={accountant.address}
-                  dateOfBirth={accountant.dateOfBirth}
-                  email={accountant.email}
-                  phoneNumber={accountant.phoneNumber}
-                  gender={accountant.gender}
-                  status={accountant.status}
-                  index={index + 1}
-                />
-              ))}
-            </div>
-            <div className="pagination mt-auto">
-              <span className="page active">1</span>
-              {/* <span className="page">2</span> */}
-            </div>
+        <div className="table teachers-table h-full">
+          <div className="table-header">
+            <div className="th">#</div>
+            <div className="th">Name</div>
+            <div className="th">Phone</div>
+            <div className="th">Email</div>
+            <div className="th">Status</div>
           </div>
+          <div className="table-body hide-scrollbar">
+            {accountants.map((accountant, index) => (
+              <Accountant
+                id={index.toString()}
+                key={index}
+                lastName={accountant.lastName}
+                firstName={accountant.firstName}
+                address={accountant.address}
+                dateOfBirth={accountant.dateOfBirth}
+                email={accountant.email}
+                phoneNumber={accountant.phoneNumber}
+                gender={accountant.gender}
+                status={accountant.status}
+                index={index + 1}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="pagination mt-auto">
+          <span className="page active">1</span>
+          {/* <span className="page">2</span> */}
         </div>
       </div>
 
-      <AddTeacher />
+      <AddAccountant />
     </>
   );
 }

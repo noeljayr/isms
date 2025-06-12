@@ -3,19 +3,17 @@
 import Plus from "@/components/svg/Plus";
 import Search from "@/components/svg/Search";
 import "@/css/students.css";
-import useGuardianModalStore from "@/context/modals/addGuardian";
-import AddGuardian from "@/components/modals/upload/guardians/AddGuardian";
+import useGuardianModalStore from "@/context/modals/guardians/addGuardian";
+import AddGuardian from "@/components/modals/guardians/AddGuardian";
 import Eye from "@/components/svg/Eye";
-import FileUpload from "@/components/svg/FileUpload";
+import FileUpload from "@/components/svg/FileDownload";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { getCookie } from "cookies-next/client";
-import { BASE_URL } from "@/constants/BASE_URL";
-import { Guardian } from "@/types/guardian-types";
+import { Guardian } from "@/types/GuardianTypes";
 import Loader from "@/components/ux/Loader";
-import { TOKEN_COOKIE_NAME } from "@/middleware";
-import useViewGuardiansModalStore from "@/context/modals/viewGuardians";
-import ViewGuardian from "@/components/modals/view/ViewGuardian";
+import useViewGuardiansModalStore from "@/context/modals/guardians/viewGuardians";
+import ViewGuardian from "@/components/modals/guardians/ViewGuardian";
+import { getGuardians } from "@/api/guardians";
 
 function Guardians() {
   const { setGuardianModalActive, addGuardianChange } = useGuardianModalStore();
@@ -26,8 +24,6 @@ function Guardians() {
   const [errorMessage, setErrorMessage] = useState("");
   const { setViewGuardianModalActive, setViewGuardiansId } =
     useViewGuardiansModalStore();
-
-  const token = getCookie(TOKEN_COOKIE_NAME);
   const [guardianData, setGuardianData] = useState<Guardian[]>([]);
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(
@@ -38,90 +34,63 @@ function Guardians() {
   );
 
   useEffect(() => {
-    const getGuardians = async () => {
-      setIsLoading(true);
-      setIsError(false);
-      setErrorMessage("");
-
-      try {
-        const response = await fetch(
-          `${BASE_URL}/Guardians?searchQuery=${search}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (response.status == 200) {
-          setIsLoading(false);
-          setGuardianData(data.data);
-        } else {
-          setIsError(true);
-          setErrorMessage(data.title);
-        }
-      } catch (err: any) {
-        setIsError(true);
-        setErrorMessage("Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getGuardians();
+    getGuardians({
+      setData: setGuardianData,
+      setErrorMessage,
+      setIsLoading,
+      setIsError,
+      search,
+    });
   }, [addGuardianChange]);
 
   return (
     <>
-      <div className="flex flex-col gap-2 w-full overflow-hidden">
-        <div className="flex gap-3 items-center w-full">
-          <button onClick={setGuardianModalActive} className="cta">
-            <Plus />
-            New Guardian
-          </button>
-          <button onClick={() => {}} className="cta-2">
-            <FileUpload />
-            Import guardians
-          </button>
-          <div className="search input-group mr-auto">
-            <Search />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              type="text"
-              placeholder="Search for guardians..."
-            />
-          </div>
+      <div className="flex gap-3 items-center w-full">
+        <button onClick={setGuardianModalActive} className="cta">
+          <Plus />
+          New Guardian
+        </button>
+       
+        <div className="search input-group mr-auto">
+          <Search />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            type="text"
+            placeholder="Search for guardians..."
+          />
         </div>
+      </div>
 
-        <div className="table guardians-table">
-          <div className="table-header">
-            <div className="th">Name</div>
-            <div className="th">Email</div>
-            <div className="th">Phone</div>
-          </div>
-          <div className="table-body hide-scrollbar">
-            {isLoading ? (
-              <div className="h-[5rem] w-[5rem] flex m-auto items-center justify-center">
-                <Loader variant="primary" />
-              </div>
-            ) : isError ? (
-              <div className="h-[5rem] w-fit flex m-auto items-center justify-center">
-                <span className="error">{errorMessage}</span>
-              </div>
-            ) : guardianData.length > 0 ? (
-              guardianData.map((guardian, index) => (
+      <div className="table guardians-table">
+        <div className="table-header">
+          <div className="th">#</div>
+          <div className="th">Name</div>
+          <div className="th">Email</div>
+          <div className="th">Phone</div>
+        </div>
+        <div className="table-body hide-scrollbar">
+          {isLoading ? (
+            <div className="h-[5rem] w-[5rem] flex m-auto items-center justify-center">
+              <Loader variant="primary" />
+            </div>
+          ) : isError ? (
+            <div className="h-[5rem] w-fit flex m-auto items-center justify-center">
+              <span className="error">{errorMessage}</span>
+            </div>
+          ) : guardianData.length > 0 ? (
+            guardianData.map((guardian, index) => {
+              let number = index + 1;
+              return (
                 <div
                   onClick={() => {
                     setViewGuardiansId(guardian.id);
                     setViewGuardianModalActive();
                   }}
-                  key={index}
+                  key={guardian.id}
                   className="tr"
                 >
+                  <span className="td font-medium">{number}</span>
                   <span className="td font-medium">
                     {guardian.firstName} {guardian.lastName}
                   </span>
@@ -134,20 +103,26 @@ function Guardians() {
                     </span>
                   </span>
                 </div>
-              ))
-            ) : (
-              <div
-                style={{ fontSize: "var(--p3)" }}
-                className="h-[5rem]  opacity-75 w-fit flex m-auto items-center justify-center"
-              >
+              );
+            })
+          ) : (
+            <div className="h-full w-full flex-col absolute top-0 left-0   flex m-auto items-center justify-center">
+              <span className="font-p-2 mb-2 font-semibold opacity-85">
                 No guardians found
-              </div>
-            )}
-          </div>
-          <div className="pagination">
-            <span className="page active">1</span>
-          </div>
+              </span>
+              <button
+                onClick={setGuardianModalActive}
+                className="cta-2 font-p-2"
+              >
+                <Plus /> Add students
+              </button>
+            </div>
+          )}
         </div>
+      </div>
+
+      <div className="pagination">
+        <span className="page active">1</span>
       </div>
 
       <AddGuardian />

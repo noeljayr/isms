@@ -16,7 +16,7 @@ import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 import "@fontsource/inter/800.css";
 import "@fontsource/inter/900.css";
-import Sidebar from "@/components/navigation/Sidebar";
+import SidebarServer from "@/components/navigation/sidebar/SidebarServer";
 import UserProfile from "@/components/UserProfile";
 import BreadCrumbs from "@/components/navigation/BreadCrumbs";
 
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="p-2">
-        <Sidebar />
+        <SidebarServer />
         <div className="page p-3 pb-0 flex flex-col gap-2 w-full h-full overflow-hidden">
           <div className="top-bar flex items-center justify-between w-full">
             <BreadCrumbs />

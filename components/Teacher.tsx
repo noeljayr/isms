@@ -1,11 +1,20 @@
-import { TeacherTypes } from "@/types/staff";
+import { TeacherTypes } from "@/types/StaffTypes";
 import Eye from "./svg/Eye";
-import useViewClassModalStore from "@/context/modals/viewClass";
+import useViewTeacherModalStore from "@/context/modals/teachers/viewTeacher";
 
 function Teacher(props: TeacherTypes) {
-  const { setViewClassModalActive } = useViewClassModalStore();
+  const { setViewTeacherModalActive, setViewTeacherId } =
+    useViewTeacherModalStore();
+
   return (
-    <div onClick={setViewClassModalActive} key={props.id} className="tr">
+    <div
+      onClick={() => {
+        setViewTeacherId(props.id);
+        setViewTeacherModalActive();
+      }}
+      key={props.id}
+      className="tr"
+    >
       <span className="td number opacity-75">{props.index}</span>
       <span className="td truncate font-medium">
         {props.firstName + " " + props.lastName}{" "}
@@ -15,12 +24,15 @@ function Teacher(props: TeacherTypes) {
       </span>
       <span className="td opacity-75">{props.email}</span>
       <span
-        className={`td status number ${
-          props.status == "active" ? "active-status" : "inactive"
-        }`}
+        className={`td number ${
+          props.status && props.status.length > 0
+            ? props.status.toLowerCase()
+            : "deactivated"
+        }-status`}
       >
-        <span></span>
-        {props.status}
+        <span className="status-label font-p-3 font-medium flex items-center gap-1">
+          {props.status}
+        </span>
       </span>
       <span className="td action">
         <span className="action-1">

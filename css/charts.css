@@ -2,14 +2,14 @@
   height: 1.85rem;
   padding-right: 0.65rem;
   padding-left: 0.65rem;
-  background-color: #fbfbfe;
+  background-color: var(--white);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   line-height: 0;
-  border-radius: 2rem;
+  border-radius: var(--radius);
 }
 
 .chart-year span {
@@ -61,23 +61,58 @@
   right: 2rem;
 }
 
-.chart-container {
-  height: 7rem;
-  width: 7rem;
+.gender-distribution .chart-container {
+  height: 8.5rem;
+  width: 8.5rem;
 }
 
 @media all and (min-width: 1440px) {
   .legend {
     right: 30%;
   }
-  .chart-container {
-    height: 8rem;
-    width: 8rem;
-  }
 }
 
-
-.financial-summary .chart *{
+.financial-summary .chart * {
   font-size: var(--p2);
   font-family: "Lexend", sans-serif;
+}
+
+.financial-summary .card-body {
+  height: 14rem !important;
+}
+
+/* .student-bar-chart canvas{
+  width: 100% !important;
+} */
+
+
+.difference .growth {
+  border: 1px solid #d9efd9;
+  color: #039503;
+}
+
+.difference .decline {
+  border: 1px solid #f9d9da;
+  color: #d80408;
+}
+
+.difference .growth * {
+  color: #039503;
+}
+
+.difference .decline * {
+  color: #d80408;
+}
+
+.difference .growth::before {
+  content: "+ ";
+}
+
+.difference .stale {
+  border: 1px solid var(--border);
+  color: grey;
+}
+
+.difference .stale  * {
+  color: grey;
 }

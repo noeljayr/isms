@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* @import "tw-animate-css"; */
+
+/* @custom-variant dark (&:is(.dark *)); */
 
 html {
   font-family: "Inter", sans-serif;
@@ -50,12 +53,41 @@ html {
   --p4: clamp(0.35rem, 1.45vw, 0.45rem);
 
   /* elements */
-  --radius: clamp(0.35rem, 1.2vw, 0.55rem);
-  --radius-s: clamp(0.25rem, 1vw, 0.45rem);
+  --radius: calc(clamp(0.7rem, 2vw, 1rem) * 0.80);
+  --radius-m: calc(clamp(0.55rem, 1.55vw, 0.8rem) * 0.80);
+  --radius-s: clamp(0.4rem, 1.25vw, 0.6rem);
+  --radius-ss: calc(clamp(0.3rem, 1vw, 0.5rem) * 0.10);
   --padding: clamp(0.75rem, 3vw, 1rem);
 
-  --transition: ease 0.5s;
+  --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --cta-hover: brightness(93%);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 @media all and (min-width: 1440px) {
@@ -78,23 +110,18 @@ body {
   color: var(--black);
   display: grid;
   overflow: hidden;
-  grid-template-columns: 11.5rem 1fr;
+  grid-template-columns: 10rem 1fr;
   grid-gap: 1rem;
   gap: 1rem;
   width: 100vw;
   height: 100vh;
 }
 
-h1 {
+h1,
+h1 * {
   font-size: var(--h1);
   font-weight: 600;
   line-height: 130%;
-  font-family: "Lexend", sans-serif;
-}
-
-h1 span {
-  font-size: var(--h1);
-  font-weight: 600;
   font-family: "Lexend", sans-serif;
 }
 
@@ -123,6 +150,44 @@ h4 {
   font-size: var(--h4);
   line-height: normal;
   font-family: "Lexend", sans-serif;
+}
+
+.font-h-1,
+.font-h-1 * {
+  font-size: var(--h1) !important;
+}
+.font-h-2,
+.font-h-2 * {
+  font-size: var(--h2) !important;
+}
+
+.font-h-3,
+.font-p-3 * {
+  font-size: var(--h3) !important;
+}
+
+.font-h-4,
+.font-p-4 * {
+  font-size: var(--h4) !important;
+}
+
+.font-p-1,
+.font-p-1 * {
+  font-size: var(--p1) !important;
+}
+.font-p-2,
+.font-p-2 * {
+  font-size: var(--p2) !important;
+}
+
+.font-p-3,
+.font-p-3 * {
+  font-size: var(--p3) !important;
+}
+
+.font-p-4,
+.font-p-4 * {
+  font-size: var(--p4) !important;
 }
 
 p {
@@ -177,6 +242,7 @@ a {
 svg path {
   stroke-width: 0.1rem;
   stroke: var(--black);
+  transition: var(--transition);
 }
 
 .icon-tabler {
@@ -210,9 +276,9 @@ svg path {
 }
 
 .card {
-  background-color: var(--background);
+  background-color: var(--white);
   border: 1px solid var(--border);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius);
   display: flex;
   flex-direction: column;
 }
@@ -222,12 +288,10 @@ svg path {
   font-weight: 600;
   opacity: 0.75;
   padding: 0.5rem;
+  padding-bottom: 0;
 }
 
 .card-body {
-  background-color: var(--white);
-  border-radius: var(--radius-s);
-  border-top: 1px solid var(--border);
   padding: 0.5rem;
 }
 
@@ -366,7 +430,7 @@ svg path {
 
 .links .counter {
   position: absolute;
-  right: 0.75rem;
+  right: -0.75rem;
 }
 
 .input-group {
@@ -416,6 +480,7 @@ svg path {
   font-size: var(--p3);
   height: 2rem;
   width: 2.75rem;
+  transition: var(--transition);
 }
 
 .years .active-year-indicator {
@@ -425,15 +490,22 @@ svg path {
   display: flex;
   border: 1px solid var(--border);
   border-radius: var(--radius-s);
+  transition: var(--transition);
 }
 
 .dropdown {
   background-color: var(--background);
   border-radius: var(--radius-s);
-  width: 5rem;
+  width: 7rem;
   position: relative;
   cursor: unset;
   justify-items: start;
+  transition: var(--transition);
+  z-index: 5;
+}
+
+.dropdown svg {
+  transition: var(--transition);
 }
 
 .dropdown-active {
@@ -456,8 +528,14 @@ svg path {
   font-size: var(--p2);
   font-weight: 600;
   cursor: pointer;
-  left: 0.75rem;
+  padding-left: 0.75rem;
   position: absolute;
+  z-index: 4;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
 }
 
 .dropdown .dropdown-options {
@@ -473,6 +551,7 @@ svg path {
   border-bottom-left-radius: var(--radius-s);
   border-bottom-right-radius: var(--radius-s);
   overflow: hidden;
+  transition: var(--transition);
 }
 
 .dropdown .dropdown-options .dropdown-option {
@@ -585,7 +664,7 @@ svg path {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 2rem;
+  /* border-radius: 2rem; */
   text-transform: capitalize;
 }
 
@@ -596,25 +675,6 @@ svg path {
   display: flex;
   margin-right: 0.25rem;
   opacity: 0.5;
-}
-
-.active-status {
-  background-color: rgba(0, 173, 0, 0.05);
-  color: var(--success);
-}
-
-.active-status span {
-  background-color: var(--success);
-}
-
-.inactive {
-  border: 1px solid var(--border);
-  color: rgba(26, 26, 26, 0.65);
-}
-
-.inactive span {
-  background-color: var(--border);
-  filter: brightness(80%);
 }
 
 .pagination {
@@ -709,7 +769,7 @@ svg path {
   padding: 0.15rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-radius: 0.45rem;
+  border-radius: var(--radius-s);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -728,4 +788,71 @@ svg path {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tabs {
+  width: 100%;
+  display: grid;
+  height: fit-content;
+}
+
+.tabs .tab {
+  font-size: var(--p2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition-delay: 0.35s;
+  transition: var(--transition);
+}
+
+.tabs {
+  border-bottom: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.tab-indicator {
+  height: 1px;
+  background-color: var(--primary);
+  bottom: -1px;
+  transition: var(--transition);
+}
+
+.view-modal .graduated-option::before {
+  background-color: var(--primary);
+}
+
+.deactivated-status .status-label::before {
+  background-color: rgb(138, 138, 138);
+}
+
+.suspended-status .status-label::before {
+  background-color: #f59e0b;
+}
+
+.transferred-status .status-label::before {
+  background-color: #b3bccf;
+}
+
+.expelled-status .status-label::before {
+  background-color: #dc2626;
+}
+
+.view-modal .expelled-option::before {
+  background-color: #dc2626;
+}
+
+.graduated-status .status-label::before {
+  background-color: var(--primary);
+}
+
+.deceased-status .status-label::before {
+  background-color: #1f2937;
+}
+
+.active-status .status-label::before {
+  background-color: var(--success);
 }

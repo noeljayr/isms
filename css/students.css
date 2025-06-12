@@ -9,8 +9,6 @@
   grid-template-columns: 1fr;
 }
 
-
-
 .table .tr .student-number {
   font-size: var(--p2);
   opacity: 0.65;
@@ -21,19 +19,41 @@
   font-size: var(--p3);
 }
 
-.students-table .table-header {
-  grid-template-columns: 4rem 1fr 1fr 5rem 2rem;
-}
-
+.students-table .table-header,
 .students-table .tr {
-  grid-template-columns: 4rem 1fr 1fr 5rem 2rem;
+  grid-template-columns: 4rem 1fr 1fr 5rem 7rem 2rem;
 }
 
-
-.guardians-table .table-header {
-  grid-template-columns: 1fr 1fr 1fr 2rem;
-}
-
+.guardians-table .table-header,
 .guardians-table .tr {
-  grid-template-columns: 1fr 1fr 1fr 2rem;
+  grid-template-columns: 3rem 1fr 1fr 1fr 2rem;
 }
+
+.student-guardian-view {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  border-radius: var(--radius);
+}
+
+.status-label {
+  display: flex;
+  align-items: center;
+}
+
+.status-label::before {
+  content: "";
+  height: 0.35rem;
+  width: 0.35rem;
+  border-radius: 50%;
+  /* margin-top: 4px; */
+  display: flex;
+}
+
+.students-table .status-label::before {
+  margin-top: 2px;
+}
+
+.view-modal .active-option::before {
+  background-color: var(--success);
+}
+

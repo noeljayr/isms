@@ -1,7 +1,7 @@
 @import url("./charts.css");
 
 .overview {
-  grid-template-columns: 15rem 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .overview-container .card {
@@ -18,9 +18,6 @@
 @media all and (min-width: 1440px) {
   .charts-events {
     grid-template-columns: 1fr 22rem;
-  }
-  .overview {
-    grid-template-columns: 22rem 1fr 1fr 1fr;
   }
 }
 
@@ -48,28 +45,24 @@
   border-radius: 2rem;
 }
 
-.difference .growth {
-  border: 1px solid #d9efd9;
-  color: #039503;
-}
 
-.difference .decline {
-  border: 1px solid #f9d9da;
-  color: #d80408;
-}
 
-.difference .growth * {
-  color: #039503;
-}
 
-.difference .decline * {
-  color: #d80408;
-}
-
-.difference .growth::before {
-  content: "+ ";
-}
-
-.difference .stale {
+.student-status{
+  padding: 0.15rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-radius: 2rem;
   border: 1px solid var(--border);
+}
+
+.active-student-status{
+  color: var(--success);
+  border: 1px solid rgba(3, 149, 3, 0.5);
+  background-color: rgba(3, 149, 3, 0.08);
+}
+
+.student-overview .student-guardian svg{
+  height: 0.8rem;
+  width: 0.8rem;
 }

@@ -1,9 +1,6 @@
-
-
-
-import { StaffTypes } from "@/types/staff";
+import { StaffTypes } from "@/types/StaffTypes";
 import Eye from "./svg/Eye";
-import useViewClassModalStore from "@/context/modals/viewClass";
+import useViewClassModalStore from "@/context/modals/classes/viewClass";
 
 function Accountant(props: StaffTypes) {
   const { setViewClassModalActive } = useViewClassModalStore();
@@ -17,9 +14,14 @@ function Accountant(props: StaffTypes) {
         <span className="td number">{props.phoneNumber}</span>
       </span>
       <span className="td opacity-75">{props.email}</span>
-      <span className={`td status number ${props.status == "active" ? "active-status" : "inactive"}`}>
+      <span
+        className={`td status number ${
+          props.status == "active" ? "active-status" : "deactivated"
+        }`}
+      >
         <span></span>
-        {props.status}</span>
+        {props.status}
+      </span>
       <span className="td action">
         <span className="action-1">
           <Eye />

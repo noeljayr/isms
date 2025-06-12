@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import useActiveYearStore, { years } from "@/context/academicYears";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 import { getCookie } from "cookies-next";
-import { useStudentModalStore } from "@/context/modals/addStudent";
+import { useStudentModalStore } from "@/context/modals/students/addStudent";
 import { BASE_URL } from "@/constants/BASE_URL";
 
 type dataTyeps = {
@@ -44,7 +44,6 @@ function EnrolledStudents() {
     );
     setPrevYearData(prevYear);
   }, [activeYear]);
-
 
   const [isError, setIsError] = useState(false);
   // const [isSuccess, setIsSuccess] = useState(false);
@@ -89,9 +88,9 @@ function EnrolledStudents() {
   }, [studentChange]);
 
   return (
-    <div className="card">
-      <div className="card-title">Enrolled students</div>
-      <div className="card-body flex gap-4 items-center">
+    <div className="grid p-2 grid-rows-[auto_1fr] rounded-[var(--radius)] border-[1px] border-[var(--border)]">
+      <div className="font-semibold font-p-2 opacity-55">Enrolled students</div>
+      <div className="flex gap-4 items-center">
         <h3>
           <NumberFlow
             value={studentCount || 0}
@@ -99,7 +98,7 @@ function EnrolledStudents() {
           />
         </h3>
 
-        <div className="flex gap-2 items-center ml-auto">
+        {/* <div className="flex gap-2 items-center ml-auto">
           <span
             className={`difference flex gap-2 ${
               prevYearData ? "" : "opacity-0"
@@ -121,7 +120,7 @@ function EnrolledStudents() {
               <span className="prev-year opacity-50">{prevYearData?.year}</span>
             )}
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

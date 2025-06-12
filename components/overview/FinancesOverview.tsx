@@ -2,13 +2,13 @@ import { FinancialSummary } from "../charts/FinancialSummary";
 
 function FinancesOverview() {
   return (
-    <div className="card financial-summary">
-      <div className="card-title">Annual Financial summary</div>
-      <div className="card-body overflow-hidden h-full w-full flex">
-        <div className="w-full h-full chart">
+    <div className="flex flex-col p-2 rounded-[var(--radius)] border-[1px] border-[var(--border)] financial-summary">
+      <div className="font-semibold font-p-2 opacity-65">Annual Financial summary</div>
+     
+        <div className="w-full h-[14rem] mt-1 chart">
           <FinancialSummary />
         </div>
-      </div>
+     
     </div>
   );
 }

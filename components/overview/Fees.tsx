@@ -42,9 +42,9 @@ function Fees() {
   }, [activeYear]);
 
   return (
-    <div className="card">
-      <div className="card-title">Fees collected</div>
-      <div className="card-body flex gap-4 items-center">
+    <div className="grid bg-[var(--background)] p-2 grid-rows-[auto_1fr] rounded-[var(--radius)] border-[1px] border-[var(--border)]">
+      <div className="font-semibold font-p-2 opacity-55">Fees collected</div>
+      <div className="flex gap-4 items-center">
         <h3>
           K{" "}
           <NumberFlow
@@ -52,30 +52,6 @@ function Fees() {
             format={{ notation: "standard", maximumFractionDigits: 2 }}
           />
         </h3>
-
-        <div className="flex gap-2 items-center ml-auto">
-          <span
-            className={`difference flex gap-2 ${
-              prevYearData ? "" : "opacity-0"
-            } ml-auto items-center`}
-          >
-            <span
-              className={`percentage ${getDifference(
-                currentYearData,
-                prevYearData
-              )} number`}
-            >
-              <NumberFlow
-                value={currentYearData?.differenceInPercentage || 0}
-                format={{ notation: "standard", maximumFractionDigits: 2 }}
-              />{" "}
-              %
-            </span>
-            {prevYearData && (
-              <span className="prev-year opacity-50">{prevYearData?.year}</span>
-            )}
-          </span>
-        </div>
       </div>
     </div>
   );

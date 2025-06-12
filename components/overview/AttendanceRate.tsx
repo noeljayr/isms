@@ -55,7 +55,7 @@ function AttendanceRate() {
           %
         </h3>
 
-        <div className="flex gap-2 items-center ml-auto">
+        {/* <div className="flex gap-2 items-center ml-auto">
           <span
             className={`difference flex gap-2 ${
               prevYearData ? "" : "opacity-0"
@@ -77,7 +77,7 @@ function AttendanceRate() {
               <span className="prev-year opacity-50">{prevYearData?.year}</span>
             )}
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

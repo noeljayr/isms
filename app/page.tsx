@@ -1,24 +1,44 @@
 import "@/css/index.css";
+import { cookies } from "next/headers";
+import { TOKEN_COOKIE_NAME } from "@/middleware";
+import { TokenTypes } from "@/types/token";
+import AdminHome from "./pages/home/AdminHome";
+import AccountantHome from "./pages/home/AccountantHome";
+import StudentHome from "./pages/home/StudentHome";
+import GuardianHome from "./pages/home/GuardianHome";
+import { getCookie } from "cookies-next/server";
+import { jwtDecode } from "jwt-decode";
+import TeacherHome from "./pages/home/TeacherHome";
+import LibrarianHome from "./pages/home/LibrarianHome";
 
-import Overview from "@/components/overview/Overview";
-import TeacherGenderDistribution from "@/components/charts/TeacherGenderDistribution";
-import StudentGenderDistribution from "@/components/charts/StudentGenderDistribution";
-import Events from "@/components/events/Events";
-import FinancesOverview from "@/components/overview/FinancesOverview";
+async function Home() {
+  const token = await getCookie(TOKEN_COOKIE_NAME, { cookies });
 
-function Home() {
+  if (!token) {
+    return <>Access Denied</>;
+  }
+
+  const decodedToken: TokenTypes = jwtDecode(token);
+
   return (
-    <div className="flex flex-col gap-3 mt-2 pb-3 w-full h-full overflow-y-auto hide-scrollbar">
-      <Overview />
-      <div className="charts-events grid gap-3">
-        <div className="charts grid gap-3">
-          <StudentGenderDistribution />
-          <TeacherGenderDistribution />
-          <FinancesOverview />
-        </div>
-        <Events />
-      </div>
-    </div>
+    <>
+      {decodedToken.role.toLowerCase() === "admin" ? (
+        <AdminHome />
+      ) : decodedToken.role.toLowerCase() === "accountant" ? (
+        <AccountantHome />
+      ) : decodedToken.role.toLowerCase() === "teacher" ? (
+        <TeacherHome />
+      ) : decodedToken.role.toLowerCase() === "student" ||
+        decodedToken.role.toLowerCase() === "" ? (
+        <StudentHome />
+      ) : decodedToken.role.toLowerCase() === "guardian" ? (
+        <GuardianHome />
+      ) : decodedToken.role.toLowerCase() === "librarian" ? (
+        <LibrarianHome />
+      ) : (
+        <>Access Denied</>
+      )}
+    </>
   );
 }
 

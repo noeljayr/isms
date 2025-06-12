@@ -1,14 +1,11 @@
 "use client";
 
 import useActiveYearStore from "@/context/academicYears";
-import { years } from "@/context/academicYears";
 import NumberFlow from "@number-flow/react";
 import { useEffect, useState } from "react";
-import { getDifference } from "@/utils/getDifference";
-import { TOKEN_COOKIE_NAME } from "@/middleware";
-import { getCookie } from "cookies-next";
-import { BASE_URL } from "@/constants/BASE_URL";
-
+import { getTeachers } from "@/api/teachers";
+import { TeacherTypes } from "@/types/StaffTypes";
+import Loader from "../ux/Loader";
 
 type dataTypes = {
   value: number;
@@ -36,67 +33,48 @@ const data: dataTypes[] = [
 
 function ActiveTeachers() {
   const { activeYear } = useActiveYearStore();
-  const currentYearData = data.find((item) => item.year === activeYear);
-  const [prevYearData, setPrevYearData] = useState<dataTypes>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-    const [teacherCount, setTeacherCounte] = useState(0);
-    const token = getCookie(TOKEN_COOKIE_NAME);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
+  const [teachers, setTeachers] = useState<TeacherTypes[]>([]);
 
   useEffect(() => {
-    const prevYear = data.find(
-      (item) => item.year === years[years.indexOf(activeYear) + 1]
-    );
-    setPrevYearData(prevYear);
-  }, [activeYear]);
-
-  useEffect(() => {
-      const getTeachers = async () => {
-        setIsLoading(true);
-        setIsError(false);
-        setErrorMessage("");
-  
-        try {
-          const response = await fetch(`${BASE_URL}/teachers`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-  
-          const data = await response.json();
-  
-          if (response.status == 200) {
-            setIsLoading(false);
-            setTeacherCounte(data.totalCount);
-          } else {
-            setIsError(true);
-            setErrorMessage(data.title);
-          }
-        } catch (err: any) {
-          setIsError(true);
-          setErrorMessage("Something went wrong");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      getTeachers();
-    }, []);
+    getTeachers({
+      setData: setTeachers,
+      setErrorMessage,
+      setIsError,
+      setIsLoading,
+      dateEmployedFrom: activeYear,
+      pageSize: 4000000,
+    });
+  }, []);
 
   return (
     <div className="card">
       <div className="card-title">Active teachers</div>
       <div className="card-body flex gap-4 items-center">
-        <h3>
-          <NumberFlow
-            value={teacherCount || 0}
-            format={{ notation: "standard", maximumFractionDigits: 0 }}
-          />
-        </h3>
+        {isLoading ? (
+          <div className="flex w-full h-full items-center justify-center">
+            <Loader />
+          </div>
+        ) : isError ? (
+          <div className="flex w-full h-full items-center justify-center">
+            <span className="font-p-2">Something went wrong</span>
+          </div>
+        ) : (
+          teachers && (
+            <>
+              <h3>
+                <NumberFlow
+                  value={teachers.length}
+                  format={{ notation: "standard", maximumFractionDigits: 0 }}
+                />
+              </h3>
+            </>
+          )
+        )}
 
-        <div className="flex gap-2 items-center ml-auto">
+        {/* <div className="flex gap-2 items-center ml-auto">
           <span className={`difference flex gap-2 ${prevYearData? "": "opacity-0"} ml-auto items-center`}>
             <span
               className={`percentage ${getDifference(
@@ -114,7 +92,7 @@ function ActiveTeachers() {
               <span className="prev-year opacity-50">{prevYearData?.year}</span>
             )}
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

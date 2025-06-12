@@ -1,3 +1,15 @@
+.view-modal {
+  width: fit-content;
+  transform: scale(1) !important;
+  right: -10rem;
+  left: unset;
+  position: fixed;
+}
+
+.view-modal-active {
+  right: 0 !important;
+}
+
 .view-modal form {
   width: 35rem !important;
   height: 100%;
@@ -10,57 +22,26 @@
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr auto;
   overflow: hidden;
-  padding-bottom: 2rem;
+  padding-bottom: 2.75rem;
 }
 
 .section {
   width: 100%;
   padding: 0.5rem;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(245, 246, 253, 0.45);
   display: flex;
   flex-direction: column;
+  background-color: rgba(245, 246, 253, 0.15);
+  position: relative;
 }
 
 .section * {
   font-size: var(--p2);
 }
 
-.section .student-overview * {
+.section .user-overview * {
   font-size: var(--p3);
-}
-
-.view-modal .tabs {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, calc(100% / 3));
-  height: fit-content;
-}
-
-.view-modal .tabs .tab {
-  font-size: var(--p2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 0.5rem;
-  padding-top: 0.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition-delay: 0.35s;
-  transition: var(--transition);
-}
-
-.view-modal .tabs {
-  border-bottom: 1px solid var(--border);
-  transition: var(--transition);
-}
-
-.view-modal .tab-indicator {
-  height: 1px;
-  width: calc(100% / 3);
-  background-color: var(--primary);
-  bottom: -1px;
-  transition: var(--transition);
 }
 
 .edit-btn {
@@ -68,17 +49,32 @@
   border-radius: var(--radius-s);
   border: 1px solid var(--border);
   font-size: var(--p3);
-  font-weight: 500;
+  font-weight: 600;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   cursor: pointer;
   transition: var(--transition);
 }
 
+.edit-btn:hover {
+  color: var(--primary);
+}
+
 .edit-btn svg {
   height: 0.65rem;
   width: 0.65rem;
   margin-left: 5px;
+  transition: var(--transition);
+  opacity: 0.75;
+}
+
+.edit-btn svg path {
+  transition: var(--transition);
+  stroke: var(--black);
+}
+
+.edit-btn:hover svg path{
+  stroke: var(--primary);
 }
 
 .view-modal input {
@@ -104,4 +100,101 @@
   padding-right: 0.5rem;
   left: 0;
   background-color: var(--white);
+}
+
+.view-actions {
+  position: absolute;
+  right: 0.35rem;
+  top: 0.35rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.view-actions svg {
+  height: 0.85rem;
+  width: 0.85rem;
+}
+
+.view-actions .delete-action {
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.view-actions svg path {
+  transition: var(--transition);
+}
+
+.view-actions .delete-action:hover svg path {
+  stroke: red;
+}
+
+.view-actions .edit-action:hover svg path,
+.active-action svg path {
+  stroke: var(--primary);
+}
+
+.view-modal .status {
+  height: fit-content;
+  background-color: var(--background);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  cursor: pointer;
+  justify-content: center;
+  font-weight: 500;
+  width: fit-content;
+  gap: 0.25rem;
+  z-index: 5;
+}
+
+.view-modal .status svg {
+  height: 0.75rem;
+  width: 0.75rem;
+  transition: var(--transition);
+  opacity: 1;
+}
+
+.view-modal .status span {
+  width: fit-content;
+  height: fit-content;
+  opacity: 1;
+  position: initial;
+  margin: 0;
+  border-radius: 0;
+}
+
+.view-modal .status-options {
+  width: 100%;
+}
+
+.view-modal .status-options span {
+  width: 100%;
+  align-items: start;
+  text-align: start;
+  justify-content: start;
+  border-radius: calc(var(--radius-s) * 0.75);
+}
+
+.view-modal .status svg path {
+  stroke-width: 2px;
+}
+
+.status-options span::before {
+  content: "";
+  height: 0.35rem;
+  width: 0.35rem;
+  border-radius: 50%;
+  margin-top: 3px;
+}
+
+.view-modal .deceased span {
+  color: var(--white);
+}
+
+.view-modal .deceased-option::before {
+  background-color: #1f2937;
 }
