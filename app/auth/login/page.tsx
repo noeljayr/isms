@@ -1,17 +1,16 @@
 "use client";
 import "@/css/auth.css";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "@/public/logo.png";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
-import { BASE_URL } from "@/constants/BASE_URL";
-import { setCookie } from "cookies-next/client";
+import { motionTransition } from "@/constants/motionTransition";
 import Loader from "@/components/ux/Loader";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import Eye from "@/components/svg/Eye";
 import EyeSlash from "@/components/svg/EyeSlash";
 import Check from "@/components/svg/Check";
+import { login } from "@/api/auth";
 
 function Auth() {
   const [password, setPassword] = useState("");
@@ -24,41 +23,25 @@ function Auth() {
   const router = useRouter();
   const [rememberMe, setRememberMe] = useState(false);
 
-  const login = async () => {
-    setIsLoading(true);
-    setIsError(false);
-    setErrorMessage("");
-    setIsSuccess(false);
-    try {
-      const response = await fetch(`${BASE_URL}/Account/signin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password,
-          email,
-          rememberme: rememberMe ? "on" : "",
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.status == 200) {
-        setIsLoading(false);
-        setIsSuccess(true);
-        setCookie("codewave_token", data.token);
+  useEffect(() => {
+    if (isSuccess) {
+      window.setTimeout(() => {
         router.push("/");
-      } else {
-        setIsError(true);
-        setErrorMessage(data.message);
-      }
-    } catch (err: any) {
-      setIsError(true);
-      setErrorMessage("Something went wrong");
-    } finally {
-      setIsLoading(false);
+      }, 1500);
     }
+  }, [isSuccess, router]);
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    login({
+      email,
+      password,
+      rememberMe,
+      setErrorMessage,
+      setIsError,
+      setIsLoading,
+      setIsSuccess,
+    });
   };
 
   return (
@@ -68,12 +51,9 @@ function Auth() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          transition={motionTranstion}
+          transition={motionTransition}
           action=""
-          onSubmit={(e) => {
-            e.preventDefault();
-            login();
-          }}
+          onSubmit={submit}
           className="p-3 flex flex-col gap-4 items-center relative"
         >
           <div className="flex items-center gap-2">
@@ -114,7 +94,7 @@ function Auth() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={motionTranstion}
+                  transition={motionTransition}
                 >
                   <Eye />
                 </motion.span>
@@ -123,7 +103,7 @@ function Auth() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={motionTranstion}
+                  transition={motionTransition}
                 >
                   <EyeSlash />
                 </motion.span>
@@ -136,7 +116,7 @@ function Auth() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={motionTranstion}
+              transition={motionTransition}
               className="error absolute bottom-[-2.5rem]"
             >
               {errorMessage}
@@ -148,7 +128,7 @@ function Auth() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={motionTranstion}
+              transition={motionTransition}
               className="success absolute bottom-[-2.5rem]"
             >
               Login success. Setting up your space...

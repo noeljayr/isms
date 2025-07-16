@@ -7,7 +7,7 @@ import { SubClassTypes, ClassTypes } from "@/types/ClassesTypes";
 import useViewSubjectModalStore from "@/context/modals/subjects/viewSubject";
 import { getClasses, getSubClasses } from "@/api/classes";
 import { AnimatePresence, motion } from "motion/react";
-import { getLessons } from "@/api/subjects";
+import { getLessons } from "@/api/lessons";
 
 type subject = {
   subject: SubjectTypes;
@@ -34,21 +34,22 @@ function Subject({ subject, subjectsLength, index }: subject) {
         setErrorMessage,
         id: subject.classId,
       });
+
       getSubClasses({
         setData: setSubClassData,
-        setIsLoading,
-        setIsError,
-        setErrorMessage,
+        setIsLoading: () => {},
+        setIsError: () => {},
+        setErrorMessage: () => {},
         id: subject.subClassId,
       });
 
-      // getLessons({
-      //   setData: setLessonsData,
-      //   setIsLoading,
-      //   setIsError,
-      //   setErrorMessage,
-      //   subjectId: subject.id,
-      // });
+      getLessons({
+        setData: setLessonsData,
+        setIsLoading: () => {},
+        setIsError: () => {},
+        setErrorMessage,
+        subClassId: subject.subClassId,
+      });
     }
   }, [subject]);
 
@@ -103,9 +104,7 @@ function Subject({ subject, subjectsLength, index }: subject) {
               </span>
 
               <span className="font medium font-p-3 border-[1px] border-[var(--background)] px-2.5 py-1 rounded-[2rem]">
-                <span className="font-semibold number font-p-3 mr-1">
-                  {0}
-                </span>
+                <span className="font-semibold number font-p-3 mr-1">{lessonsData.length}</span>
                 Lessons
               </span>
             </div>

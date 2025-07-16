@@ -15,8 +15,8 @@ import ViewSubject from "@/components/modals/subjects/ViewSubject";
 import { ClassTypes, SubClassTypes } from "@/types/ClassesTypes";
 import ChevronDown from "@/components/svg/ChevronDown";
 import { getClasses, getSubClasses } from "@/api/classes";
-import { teacherId } from "@/constants/motionTranstion";
 import { getTeacherSubject } from "@/api/teachers";
+import { useTokenStore } from "@/context/token";
 
 function TeacherSubjects() {
   const { setSubjectModalActive, addSubjectChange } = useSubjectModalStore();
@@ -31,6 +31,8 @@ function TeacherSubjects() {
   const [activeSubClass, setActiveSubClass] = useState<SubClassTypes>();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
+  const {Id} = useTokenStore()
+  const [teacherId, setTeacherId] = useState(Id)
 
   const [search, setSearch] = useState<string>(
     searchParams.get("search") || ""
@@ -48,9 +50,9 @@ function TeacherSubjects() {
       setIsError,
       setData: setSubjectData,
       id: teacherId,
-      search
+      search,
     });
-  }, [teacherId, search]);
+  }, [search, teacherId]);
 
   return (
     <>

@@ -6,7 +6,7 @@ import Pen from "@/components/svg/Edit";
 import Loader from "@/components/ux/Loader";
 import { TeacherTypes } from "@/types/StaffTypes";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import useViewTeacherModalStore from "@/context/modals/teachers/viewTeacher";
 import { useTeacherModalStore } from "@/context/modals/teachers/addTeacher";
 import { formatDate } from "@/utils/formatDate";
@@ -97,7 +97,7 @@ function ViewTeacher() {
       SetEmail(teachersData.email);
       setPhoneNumber(teachersData.phoneNumber);
     }
-  }, [pReadyOnly]);
+  }, [pReadyOnly, teachersData]);
 
   const edit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -266,11 +266,11 @@ function ViewTeacher() {
                       </div>
                     </div>
 
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="popLayout">
                       <motion.div
                         layout
                         key={"container"}
-                        transition={motionTranstion}
+                        transition={motionTransition}
                         className="section"
                       >
                         <motion.span layout="position" className="font-medium">
@@ -282,7 +282,7 @@ function ViewTeacher() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={motionTranstion}
+                            transition={motionTransition}
                             layout="position"
                             key={"qf-tags"}
                             className="flex flex-wrap mt-2 gap-4 w-full"
@@ -301,7 +301,7 @@ function ViewTeacher() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={motionTranstion}
+                            transition={motionTransition}
                             layout="position"
                             key={"qf-checkboxes"}
                             className="flex gap-6 items-center mt-2"
@@ -365,7 +365,7 @@ function ViewTeacher() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={motionTranstion}
+                        transition={motionTransition}
                         style={{
                           width: "fit-content",
                           paddingLeft: "1rem",
@@ -383,7 +383,7 @@ function ViewTeacher() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={motionTranstion}
+                        transition={motionTransition}
                         style={{
                           width: "fit-content",
                           paddingLeft: "1rem",

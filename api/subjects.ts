@@ -1,7 +1,8 @@
 "use client";
 
 import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
+
 import {
   AddSubjectTypes,
   GetLessonsTypes,
@@ -25,12 +26,11 @@ export const getSubjects = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
- 
   let endpoint = id ? `${BASE_URL}/subjects/${id}` : `${BASE_URL}/subjects`;
 
-  
   if (!id) {
     const params = new URLSearchParams();
 
@@ -48,7 +48,7 @@ export const getSubjects = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -68,7 +68,6 @@ export const getSubjects = async ({
   }
 };
 
-
 export const addSubject = async ({
   classId,
   subClassId,
@@ -84,19 +83,20 @@ export const addSubject = async ({
   setIsError(false);
   setErrorMessage("");
 
-  if (token) {
-    const schoolId = token.schoolId;
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
 
+  if (token) {
     try {
       const response = await fetch(`${BASE_URL}/subjects`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name,
-          schoolId,
+          SchoolId,
           classId,
           subClassId,
           isMandotory,
@@ -139,20 +139,23 @@ export const upDateSubject = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
+
   if (token) {
     try {
       const response = await fetch(`${BASE_URL}/subjects/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name,
           classId,
           subClassId,
           isMandotory,
-          schoolId: token.schoolId,
+          SchoolId,
         }),
       });
 
@@ -192,13 +195,14 @@ export const deleteSubject = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (token) {
     try {
       const response = await fetch(`${BASE_URL}/subjects/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -219,8 +223,6 @@ export const deleteSubject = async ({
   }
 };
 
-
-
 export const getLessons = async ({
   setData,
   setIsLoading,
@@ -239,12 +241,12 @@ export const getLessons = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
+
   if (!token) throw new Error("Not authorized");
 
- 
   let endpoint = id ? `${BASE_URL}/lessons/${id}` : `${BASE_URL}/lessons`;
 
-  
   if (!id) {
     const params = new URLSearchParams();
 
@@ -256,7 +258,6 @@ export const getLessons = async ({
     if (teacherId) params.append("teacherId", teacherId);
     if (subjectId) params.append("subjectId", subjectId);
 
-
     endpoint += `?${params.toString()}`;
   }
 
@@ -265,7 +266,7 @@ export const getLessons = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 

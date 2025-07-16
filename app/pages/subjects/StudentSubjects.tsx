@@ -12,7 +12,7 @@ import Loader from "@/components/ux/Loader";
 import AddSubject from "@/components/subjects/AddSubject";
 import useSubjectModalStore from "@/context/modals/subjects/addSubject";
 import ViewSubject from "@/components/modals/subjects/ViewSubject";
-import { teacherId } from "@/constants/motionTranstion";
+import { teacherId } from "@/constants/motionTransition";
 import { getTeacherSubject } from "@/api/teachers";
 import { StudentTypes } from "@/types/StudentTypes";
 import { getStudents } from "@/api/students";
@@ -48,7 +48,7 @@ function StudentSubjects() {
     if (!student) return;
     if (!student.classId) return;
     if (!student.subClassId) return;
-    
+
     getSubjects({
       setSubjectData,
       setErrorMessage,

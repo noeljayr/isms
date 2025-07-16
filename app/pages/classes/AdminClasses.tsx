@@ -64,7 +64,7 @@ function AdminClasses() {
       search,
       page,
     });
-  }, [addClassesChange, search]);
+  }, [addClassesChange, search, page]);
 
   return (
     <>

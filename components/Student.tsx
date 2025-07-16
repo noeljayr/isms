@@ -23,7 +23,7 @@ function Student({ student, index }: { student: StudentTypes; index: number }) {
       setIsError: () => {},
       setErrorMessage: () => {},
     });
-  }, []);
+  }, [student.id]);
 
   return (
     <div

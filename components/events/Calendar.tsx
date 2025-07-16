@@ -28,7 +28,7 @@ export interface LessonItem {
   subjectId: string;
   topic: string;
   classId: string;
-  schoolId: string;
+  SchoolId: string;
   subClassId: string;
   teacherId: string;
   term: string;
@@ -112,7 +112,7 @@ export default function YearlyCalendar({
       }
     };
     getEvents();
-  }, [addEventChange]);
+  }, [addEventChange, token]);
 
   // Group events by date
   const eventsByDate = useMemo(() => {

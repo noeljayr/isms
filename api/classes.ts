@@ -1,8 +1,7 @@
 "use client";
 
 import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
-
+import { useTokenStore } from "@/context/token";
 
 import {
   AddClassTypes,
@@ -28,6 +27,7 @@ export const getClasses = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = id ? `${BASE_URL}/classes/${id}` : `${BASE_URL}/classes`;
@@ -50,7 +50,7 @@ export const getClasses = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token?.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -86,6 +86,7 @@ export const getSubClasses = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = id
@@ -108,7 +109,7 @@ export const getSubClasses = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token?.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -143,17 +144,19 @@ export const updateClass = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
   if (!token) throw new Error("Not authorized");
 
   const response = await fetch(`${BASE_URL}/classes/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       name,
-      SchoolId: token.schoolId,
+      SchoolId: SchoolId,
     }),
   });
 
@@ -186,17 +189,19 @@ export const addClass = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
   if (!token) throw new Error("Not authorized");
 
   const response = await fetch(`${BASE_URL}/classes/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       name,
-      SchoolId: token.schoolId,
+      SchoolId: SchoolId,
     }),
   });
 
@@ -230,18 +235,20 @@ export const addSubClass = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
   if (!token) throw new Error("Not authorized");
 
   const response = await fetch(`${BASE_URL}/SubClass/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       classId,
       name,
-      SchoolId: token.schoolId,
+      SchoolId: SchoolId,
       status: "active",
     }),
   });

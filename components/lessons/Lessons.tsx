@@ -10,165 +10,160 @@ import {
   addMinutes,
   isSameDay,
   getDay,
+  isBefore,
 } from "date-fns";
+import { LessonTypes } from "@/types/SubjectsTypes";
+import { useTokenStore } from "@/context/token";
 import { getLessons } from "@/api/subjects";
-import { LessonTypes, SubjectTypes } from "@/types/SubjectsTypes";
-import { motionTranstion, teacherId } from "@/constants/motionTranstion";
-import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
-import { AnimatePresence, motion } from "motion/react";
-import XClose from "../svg/XClose";
-import Loader from "../ux/Loader";
-import { getTeacherSubject } from "@/api/teachers";
-import { IconStarFilled } from "@tabler/icons-react";
-import { ClassTypes, SubClassTypes } from "@/types/ClassesTypes";
-import { getClasses, getSubClasses } from "@/api/classes";
-import { lessonsData } from "@/context/data/lessonsData";
+import AddLesson from "../modals/lessons/AddLesson";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+
+const views = ["Day view", "Week view"];
 
 const WeeklyCalendar: React.FC = () => {
-  const [lessons, setLessons] = useState<LessonTypes[]>(lessonsData);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const { Id, role } = useTokenStore();
+  const [teacherId, setTeacherId] = useState(Id);
+  const [lessons, setLessons] = useState<LessonTypes[]>([]);
 
+ 
+  const [activeView, setActiveView] = useState("Week view");
+  const [position, setPosition] = useState("0");
+
+  useEffect(() => {
+    const index = views.indexOf(activeView);
+    setPosition(`${index * 4.5}`);
+  }, [activeView]);
+
+ 
   const today = new Date();
   const dayOfWeek = getDay(today);
-  const effectiveDate =
+  const effectiveToday =
     dayOfWeek === 0
       ? addDays(today, 1)
       : dayOfWeek === 6
       ? addDays(today, 2)
       : today;
-  const weekStart = startOfWeek(effectiveDate, { weekStartsOn: 1 });
+
+  const [weekStart, setWeekStart] = useState(
+    startOfWeek(effectiveToday, { weekStartsOn: 1 })
+  );
+
+  const [selectedDay, setSelectedDay] = useState<Date>(effectiveToday);
+
   const days = Array.from({ length: 5 }).map((_, i) => addDays(weekStart, i));
-  // Only display time slots from 7 AM to 5 PM
   const hours = Array.from({ length: 13 }).map((_, i) => i + 7);
   const hourHeight = 64;
 
   const [showModal, setShowModal] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
   const [newTitle, setNewTitle] = useState("");
-  const [classId, setClassId] = useState("");
   const [subClassId, setSubClassId] = useState("");
-  const [subjectId, setSubjectId] = useState("");
-  const [userRole, setUserRole] = useState("");
-
-  // useEffect(() => {
-  //   getLessons({
-  //     setData: setLessons,
-  //     setIsLoading,
-  //     setIsError,
-  //     setErrorMessage,
-  //     teacherId,
-  //   });
-  // }, []);
-
-  const [assignedSubjectsData, setAssignedSubjectsData] = useState<
-    SubjectTypes[]
-  >([]);
-  const [selectedSubjects, setSelectedSubjects] =
-    useState<SubjectTypes[]>(assignedSubjectsData);
+  const [classId, setClassId] = useState("");
 
   useEffect(() => {
-    getTeacherSubject({
-      setIsLoading,
-      setErrorMessage,
-      setIsError,
-      setData: setAssignedSubjectsData,
-      id: teacherId,
+    getLessons({
+      setData: setLessons,
+      setIsLoading: () => {},
+      setIsError: () => {},
+      setErrorMessage: () => {},
+      teacherId: role.toLowerCase() === "teacher" ? teacherId : "",
+      classId,
     });
-  }, []);
+  }, [teacherId, classId, role]);
+
+  const getDaysToDisplay = () => (activeView === "Week view" ? days : [selectedDay]);
 
   const handleSlotClick = (day: Date, hour: number) => {
-    const dt = new Date(day);
-    dt.setHours(hour, 0, 0, 0);
-    setSelectedDateTime(dt);
+    const selectedDate = new Date(day);
+    selectedDate.setHours(hour, 0, 0, 0);
+
+    if (isBefore(selectedDate, today)) return; // Prevent past lesson adding
+
+    setSelectedDateTime(selectedDate);
     setNewTitle("");
     setShowModal(true);
   };
 
-  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsLoading(true);
-    setIsError(false);
-    setErrorMessage("");
-    setIsSuccess(false);
-
-    if (!selectedDateTime || !newTitle.trim()) return;
-
-    const newLesson: Omit<LessonTypes, "id"> = {
-      dayTime: selectedDateTime.toISOString(),
-      teacherId: teacherId,
-      subjectId,
-      topic: newTitle,
-      classId: classId,
-      schoolId: token?.schoolId || "",
-      subClassId,
-      term: "1",
-      weekDay: format(selectedDateTime, "EEEE"),
-      academicYear: "2025",
-      weekNumber: 0,
-      status: "scheduled",
-    };
-
-    try {
-      const response = await fetch(`${BASE_URL}/lessons`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token?.value}`,
-        },
-        body: JSON.stringify(newLesson),
-      });
-
-      const result = await response.json();
-
-      if (response.status == 200) {
-        setLessons((prev) => [...prev, result.data]);
-        setShowModal(false);
-        setIsLoading(false);
-      } else {
-        setIsError(true);
-        setErrorMessage(result.title || "something went wrong");
-      }
-    } catch (err) {
-      alert("Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
+  const handleDayClick = (day: Date) => {
+    setSelectedDay(day);
+    setActiveView("Day view");
   };
 
-  useEffect(() => {
-    if (!token) return;
-    setUserRole(token.role);
-  }, [token]);
+  const goToPreviousWeek = () => {
+    const newStart = addDays(weekStart, -7);
+    setWeekStart(newStart);
+    if (activeView === "Day view") setSelectedDay(addDays(selectedDay, -7));
+  };
+
+  const goToNextWeek = () => {
+    const newStart = addDays(weekStart, 7);
+    setWeekStart(newStart);
+    if (activeView === "Day view") setSelectedDay(addDays(selectedDay, 7));
+  };
 
   return (
     <div className="relative h-full border-[1px] border-[var(--border)] rounded-[var(--radius)] overflow-auto hide-scrollbar">
-      {/* Sticky Header */}
-      <div className="sticky bg-white top-0 z-10 flex flex-col pt-2">
-        <div className="grid grid-cols-[5.0rem_1fr_2.5rem] w-full">
-          <span></span>
-          <span className="font-semibold opacity-50 text-center">This week's timetable</span>
-          <span></span>
+      <div className="p-2 flex justify-between items-center">
+        <div className="flex gap-2">
+          <button
+            onClick={goToPreviousWeek}
+            className="h-7 w-7 cursor-pointer flex items-center justify-center border border-[var(--border)] rounded-full bg-[var(--background)]"
+          >
+            <IconChevronLeft className="h-4 w-4 opacity-80" />
+          </button>
+          <button
+            onClick={goToNextWeek}
+            className="h-7 w-7 cursor-pointer flex items-center justify-center border border-[var(--border)] rounded-full bg-[var(--background)]"
+          >
+            <IconChevronRight className="h-4 w-4 opacity-80" />
+          </button>
         </div>
+       
+
+        <div
+          style={{ width: "9rem" }}
+          className={`years flex items-center relative`}
+        >
+          <span
+            style={{
+              left: position + "rem",
+              width: "4.5rem",
+              height: "1.8rem"
+            }}
+            className="active-year-indicator z-0 absolute"
+          ></span>
+          {views.map((view) => (
+            <div
+              key={view}
+              style={{ width: "4.5rem", height: "1.8rem" }}
+              className={`year font-bold flex items-center justify-center relative z-[1] number cursor-pointer ${
+                activeView === view ? "active-year opacity-85" : "opacity-50"
+              }`}
+              onClick={() => setActiveView(view)}
+            >
+              {view}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="sticky bg-white top-0 z-10 flex flex-col pt-2">
         <div className="flex opacity-90">
           <div className="w-10"></div>
-          <div className="flex-1 grid grid-cols-5">
-            {days.map((d, i) => {
+          <div className={`flex-1 grid ${activeView === "Day view" ? "grid-cols-1": 'grid-cols-5'}`}>
+            {getDaysToDisplay().map((d, i) => {
               const isToday = isSameDay(d, today);
               return (
                 <div
                   key={i}
-                  className={`flex flex-col items-center py-2 border-b-[1px] border-b-[var(--border)]`}
+                  onClick={() => handleDayClick(d)}
+                  className="flex flex-col items-center py-2 border-b-[1px] border-b-[var(--border)] cursor-pointer hover:bg-gray-50"
                 >
                   <div className="text-sm font-medium font-p-3 opacity-50">
                     {format(d, "EEEE")}
                   </div>
                   <div
-                    className={`"mt-1 font-p-1 font-semibold ${
+                    className={`mt-1 font-p-1 font-semibold ${
                       isToday ? "today-calendar" : "opacity-75"
                     }`}
                   >
@@ -181,7 +176,6 @@ const WeeklyCalendar: React.FC = () => {
         </div>
       </div>
 
-      {/* Body */}
       <div className="flex">
         <div className="flex flex-col w-10 text-right border-r-[var(--border)]">
           {hours.map((h) => (
@@ -196,7 +190,7 @@ const WeeklyCalendar: React.FC = () => {
         </div>
 
         <div className="flex-1 flex">
-          {days.map((day, idx) => (
+          {getDaysToDisplay().map((day, idx) => (
             <div
               key={idx}
               className="flex-1 relative border-l-[1px] border-l-[var(--border)]"
@@ -206,10 +200,10 @@ const WeeklyCalendar: React.FC = () => {
                   key={hour}
                   style={{ height: `${hourHeight}px` }}
                   className={`border-b-[1px] border-[var(--border)] ${
-                    userRole.toLowerCase() == "teacher" ? "cursor-pointer" : ""
+                    role.toLowerCase() === "teacher" ? "cursor-pointer" : ""
                   }`}
                   onClick={() => {
-                    if (userRole.toLowerCase() == "teacher") {
+                    if (role.toLowerCase() === "teacher") {
                       handleSlotClick(day, hour);
                     }
                   }}
@@ -228,17 +222,28 @@ const WeeklyCalendar: React.FC = () => {
                   const lessonMinutes = ld.getHours() * 60 + ld.getMinutes();
                   const offsetMinutes = lessonMinutes - calendarStartMinutes;
                   const top = (offsetMinutes / 60) * hourHeight;
+                  const isPast = isBefore(ld, today);
                   return (
                     <div
                       key={lesson.id}
-                      className="absolute left-2 right-1 rounded-[var(--radius-s)] bg-blue-200 border border-blue-400 text-xs p-1 overflow-hidden"
+                      className={`absolute left-2 right-1 rounded-[var(--radius-s)] bg-blue-200 border border-blue-400 text-xs p-1 overflow-hidden ${
+                        isPast ? "opacity-50" : ""
+                      }`}
                       title={lesson.topic}
-                      style={{ top: `${top}px`, height: `` }}
+                      style={{ top: `${top}px` }}
                     >
-                      <div className="font-semibold font-p-3 truncate">
+                      <div
+                        className={`${
+                          isPast ? "line-through" : ""
+                        } font-semibold font-p-3 truncate`}
+                      >
                         {lesson.topic}
                       </div>
-                      <div className="font-p-4 mt-1">
+                      <div
+                        className={`${
+                          isPast ? "line-through" : ""
+                        } font-p-4 mt-1`}
+                      >
                         {format(ld, "h:mm a")} –{" "}
                         {format(addMinutes(ld, 60), "h:mm a")}
                       </div>
@@ -250,257 +255,22 @@ const WeeklyCalendar: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal */}
-
       {showModal && (
-        <div className="modal-overlay fixed h-screen w-screen left-0 top-0"></div>
+        <div className="modal-overlay fixed h-screen w-screen left-0 top-0" />
       )}
 
-      <div
-        className={`modal ${
-          showModal ? "modal-active" : ""
-        } add-class fixed h-screen w-screen left-0 top-0 flex items-center justify-center`}
-      >
-        <form onSubmit={handleSave} className="card relative">
-          <motion.span className="card-title flex items-center">
-            Add a lesson
-            <span
-              onClick={() => setShowModal(false)}
-              title="discard"
-              className="close ml-auto"
-            >
-              <XClose />
-            </span>
-          </motion.span>
-          <div className="card-body flex flex-col gap-4">
-            <p
-              style={{ color: "var(--primary)" }}
-              className="font-p-3 mt-2 p-2 font-semibold w-full bg-[var(--background)] rounded-[var(--radius-s)]"
-            >
-              {selectedDateTime && (
-                <>
-                  Time: {format(selectedDateTime, "eeee, MMM d, yyyy h:mm a")}
-                </>
-              )}
-            </p>
-            <motion.div className="input-group">
-              <label htmlFor="">Topic</label>
-              <input
-                required
-                onChange={(e) => {
-                  setNewTitle(e.target.value);
-                }}
-                value={newTitle}
-                type="text"
-                placeholder="Topic"
-              />
-            </motion.div>
-
-            <div className="subjects flex w-full ">
-              {isLoading ? (
-                <div className="flex flex-col w-full h-full items-center justify-center">
-                  <Loader variant="primary" />
-                </div>
-              ) : assignedSubjectsData && assignedSubjectsData.length > 0 ? (
-                <AnimatePresence>
-                  <div className="grid grid-cols-2 gap-2 w-full">
-                    {assignedSubjectsData.map((s, index) => {
-                      return (
-                        <SubjectComponent
-                          index={index}
-                          setClassId={setClassId}
-                          subjectId={subjectId}
-                          subject={s}
-                          setIsSuccess={() => {}}
-                          setSubjectId={setSubjectId}
-                          setSubClassId={setSubClassId}
-                          key={s.id}
-                        />
-                      );
-                    })}
-                  </div>
-                </AnimatePresence>
-              ) : (
-                <motion.div
-                  layout
-                  className="p-2 text-center flex flex-col items-center justify-center h-full w-full"
-                >
-                  <span className="font-semibold font-p-2 opacity-85">
-                    No subjects found
-                  </span>
-                  <span className="font-p-4">
-                    The teacher has not been assigned any subjects yet.{" "}
-                  </span>
-                </motion.div>
-              )}
-            </div>
-            <div className="cta-container items-center flex gap-2 w-full justify-end">
-              <AnimatePresence>
-                {isError && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={motionTranstion}
-                    style={{
-                      width: "fit-content",
-                      paddingLeft: "1rem",
-                      paddingRight: "1rem",
-                      height: "fit-content",
-                    }}
-                    className="error"
-                  >
-                    {errorMessage}
-                  </motion.span>
-                )}
-
-                {isSuccess && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={motionTranstion}
-                    style={{
-                      width: "fit-content",
-                      paddingLeft: "1rem",
-                      paddingRight: "1rem",
-                      height: "fit-content",
-                    }}
-                    className="success"
-                  >
-                    Classes has been added successfully
-                  </motion.span>
-                )}
-              </AnimatePresence>
-              <span
-                onClick={() => setShowModal(false)}
-                className="cta-2 ml-auto"
-              >
-                Cancel
-              </span>
-              <button className="cta">{isLoading ? <Loader /> : "Add"}</button>
-            </div>
-          </div>
-        </form>
-      </div>
+      {selectedDateTime && (
+        <AddLesson
+          newTitle={newTitle}
+          selectedDateTime={selectedDateTime}
+          setLessons={setLessons}
+          setNewTitle={setNewTitle}
+          setShowModal={setShowModal}
+          showModal={showModal}
+        />
+      )}
     </div>
   );
 };
 
 export default WeeklyCalendar;
-
-const SubjectComponent = ({
-  index,
-  subject,
-  isSelected,
-  setIsSuccess,
-  setClassId,
-  setSubClassId,
-  setSubjectId,
-  subjectId,
-}: {
-  subject: SubjectTypes;
-  index: number;
-  isSelected?: Boolean;
-  setIsSuccess: (state: boolean) => void;
-  setClassId: (state: string) => void;
-  setSubClassId: (state: string) => void;
-  setSubjectId: (state: string) => void;
-  subjectId: string;
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [classData, setClassData] = useState<ClassTypes>();
-  const [subClassData, setSubClassData] = useState<SubClassTypes>();
-
-  useEffect(() => {
-    if (subject.classId) {
-      getClasses({
-        setData: setClassData,
-        setIsLoading,
-        setIsError,
-        setErrorMessage,
-        id: subject.classId,
-      });
-    }
-
-    if (subject.subClassId) {
-      getSubClasses({
-        setData: setSubClassData,
-        setIsLoading,
-        setIsError,
-        setErrorMessage,
-        id: subject.subClassId,
-      });
-    }
-  }, [subject]);
-
-  return (
-    <>
-      {isLoading ? (
-        <></>
-      ) : isError ? (
-        <></>
-      ) : classData ? (
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            layout
-            onClick={() => {
-              setClassId(classData.id);
-              setSubClassId(subClassData?.id || "");
-              setSubjectId(subject.id);
-            }}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{
-              duration: 0.5,
-              delay: index / 10,
-              ease: [0.25, 0.1, 0.25, 1],
-            }}
-            key={index}
-            className={`cursor-pointer border-[var(--border)] justify-center relative p-1.5 flex flex-col border-[1px] ${
-              subject.id == subjectId && "bg-[#f0f1fc]"
-            } rounded-[var(--radius-s)]`}
-          >
-            <span className="font-p-2 font-medium">{subject.name}</span>
-            <span className="flex gap-4 mt-0.5 items-center">
-              {subject.isMandotory && (
-                <>
-                  <span
-                    className={`flex items-center font-p-3 opacity-60 font-medium ${
-                      subject.isMandotory ? "mandotory" : ""
-                    }`}
-                  >
-                    <IconStarFilled
-                      color="#ffc801"
-                      className="h-2.5 w-2.5 mr-1"
-                    />{" "}
-                    Mandatory
-                  </span>
-
-                  <span className="font-black opacity-20">•</span>
-                </>
-              )}
-              <span>
-                {classData && (
-                  <span className="font-p-3 font-medium opacity-60">
-                    {classData.name}
-                  </span>
-                )}
-                {subClassData && (
-                  <span className="font-p-3 font-medium opacity-60">
-                    {subClassData.name}
-                  </span>
-                )}
-              </span>
-            </span>
-          </motion.div>
-        </AnimatePresence>
-      ) : (
-        <></>
-      )}
-    </>
-  );
-};

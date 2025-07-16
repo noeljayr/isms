@@ -14,7 +14,7 @@ import { getCookie } from "cookies-next/client";
 import { BASE_URL } from "@/constants/BASE_URL";
 import { generatePassword } from "@/utils/generatePassword";
 import NumberFlow from "@number-flow/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 
 const REQUIRED_COLUMNS = [
   "firstName",
@@ -98,7 +98,7 @@ function ImportStudents() {
       return;
     }
     const decoded: any = jwtDecode(token);
-    const schoolId = decoded.SchoolId;
+    const SchoolId = decoded.SchoolId;
 
     for (const [index, row] of rows.entries()) {
       try {
@@ -110,7 +110,7 @@ function ImportStudents() {
           },
           body: JSON.stringify({
             ...row,
-            schoolId,
+            SchoolId,
             status: "active",
             password: "",
           }),
@@ -164,7 +164,7 @@ function ImportStudents() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={motionTranstion}
+                  transition={motionTransition}
                   className="upload-progress grid grid-cols-[1fr_auto] gap-2 items-center"
                 >
                   <span className="progress-bar">

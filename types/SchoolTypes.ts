@@ -2,7 +2,7 @@ import { QueryTypes } from "./QueryTypes";
 
 export interface SchoolTypes {
   id: string;
-  schoolName: string;
+  SchoolName: string;
   schoolType: string;
   schoolCategory: string;
   schoolLogoPath: string;
@@ -19,7 +19,7 @@ export interface GetSchoolTypes extends QueryTypes {
 
 export interface UpdateSchooTypes extends QueryTypes {
   id: string;
-  schoolName: string;
+  SchoolName: string;
   schoolType: string;
   schoolCategory: string;
   schoolLogoPath: string;

@@ -56,7 +56,7 @@ function GuardianStudents({ guardianName }: { guardianName: string }) {
       }
     };
     getStudents();
-  }, [viewGuardiansId]);
+  }, [viewGuardiansId, token]);
 
   return (
     <div className="grid grid-cols-1 grid-rows-[auto_1fr] overflow-hidden">

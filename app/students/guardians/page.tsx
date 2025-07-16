@@ -41,7 +41,7 @@ function Guardians() {
       setIsError,
       search,
     });
-  }, [addGuardianChange]);
+  }, [addGuardianChange, search]);
 
   return (
     <>
@@ -80,7 +80,7 @@ function Guardians() {
             </div>
           ) : guardianData.length > 0 ? (
             guardianData.map((guardian, index) => {
-              let number = index + 1;
+              const number = index + 1;
               return (
                 <div
                   onClick={() => {

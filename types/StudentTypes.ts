@@ -7,7 +7,7 @@ export interface StudentTypes {
   gender: string;
   firstName: string;
   lastName: string;
-  schoolId: string;
+  SchoolId: string;
   accountId: string;
   phoneNumber: string;
   email: string;
@@ -31,7 +31,7 @@ export interface GetStudents extends QueryTypes {
   id?: string;
   classId?: string;
   subClassId?: string;
-  schoolId?: string;
+  SchoolId?: string;
   gender?: string;
   status?: string;
   guardianId?: string;
@@ -56,10 +56,9 @@ export interface EditStudentTypes extends QueryTypes {
   parentId: string | null;
   classId: string;
   subClassId: string;
-  status: string,
-  enrollmentDate: string,
+  status: string;
+  enrollmentDate: string;
 }
-
 
 export interface AddStudentTypes extends QueryTypes {
   setSuccess: (state: boolean) => void;
@@ -73,6 +72,6 @@ export interface AddStudentTypes extends QueryTypes {
   dateOfBirth: string;
   classId: string;
   subClassId: string;
-  status: string,
-  enrollmentDate: string,
+  status: string;
+  enrollmentDate: string;
 }

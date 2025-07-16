@@ -66,7 +66,7 @@ function Accountants() {
       }
     };
     getAccountants();
-  }, []);
+  }, [search, token]);
 
   return (
     <>

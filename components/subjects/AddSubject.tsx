@@ -5,8 +5,7 @@ import XClose from "@/components/svg/XClose";
 import { useTeacherModalStore } from "@/context/modals/teachers/addTeacher";
 import CheckCircle from "@/components/svg/CheckCircle";
 
-import { motionTranstion } from "@/constants/motionTranstion";
-useTeacherModalStore;
+import { motionTransition } from "@/constants/motionTransition";
 import { AnimatePresence, motion } from "motion/react";
 import Loader from "@/components/ux/Loader";
 import useSubjectModalStore from "@/context/modals/subjects/addSubject";
@@ -152,7 +151,7 @@ function AddSubject() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -170,7 +169,7 @@ function AddSubject() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

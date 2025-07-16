@@ -18,7 +18,7 @@ function Tabs({
   useEffect(() => {
     const index = tabs.indexOf(activeTab);
     setIndicatorPosition(`calc(${index} * 100% / ${tabs.length})`);
-  }, [activeTab]);
+  }, [activeTab, tabs]);
 
   return (
     <div

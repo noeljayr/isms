@@ -47,7 +47,7 @@ function ActiveTeachers() {
       dateEmployedFrom: activeYear,
       pageSize: 4000000,
     });
-  }, []);
+  }, [activeYear]);
 
   return (
     <div className="card">

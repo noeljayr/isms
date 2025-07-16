@@ -1,24 +1,24 @@
 "use client";
 
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import { getLessons } from "@/api/subjects";
 import { LessonTypes } from "@/types/SubjectsTypes";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 import Loader from "@/components/ux/Loader";
 import Link from "next/link";
 
 function Lessons({ subjectId }: { subjectId: string | null }) {
+  const { token } = useTokenStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [lessonsData, setLessonsData] = useState<LessonTypes[]>([]);
 
-  if (!token) return <></>;
+  
 
-  const user = token.role;
 
   useEffect(() => {
     if (!subjectId) return;
@@ -31,17 +31,18 @@ function Lessons({ subjectId }: { subjectId: string | null }) {
     });
   }, [subjectId]);
 
+  if (!token) return <></>;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={motionTranstion}
+      transition={motionTransition}
       className="section relative grid w-full h-full overflow-hidden grid-rows-[auto_1fr] gap-2"
       key="lessons"
       layout="position"
     >
-      <span className="font-medium">Lessons</span>
       <div className="flex flex-col gap-2 overflow-y-auto relative h-full w-full">
         {isLoading ? (
           <div className="flex absolute w-full h-full items-center justify-center">

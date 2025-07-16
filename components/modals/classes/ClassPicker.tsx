@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ClassTypes, SubClassTypes } from "@/types/ClassesTypes";
 import Check from "@/components/svg/Check";
 import { AnimatePresence, motion } from "framer-motion";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import Loader from "@/components/ux/Loader";
 import { getClasses, getSubClasses } from "@/api/classes";
 
@@ -67,7 +67,7 @@ function ClassPicker(props: Props) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [props]);
 
   return (
     <AnimatePresence>
@@ -122,7 +122,7 @@ function ClassPicker(props: Props) {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          transition={motionTranstion}
+                          transition={motionTransition}
                           className="sub-classes absolute flex flex-col p-2"
                         >
                           {isSubLoading ? (

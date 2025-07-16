@@ -6,7 +6,7 @@ import Lessons from "@/components/lessons/Lessons";
 import Announcements from "@/components/overview/teacher/Announcements";
 import TeacherExamsOverview from "@/components/overview/teacher/TeacherExamsOverview";
 import TeacherSubjectsOverview from "@/components/overview/teacher/TeacherSubjectsOverview";
-import { teacherId } from "@/constants/motionTranstion";
+import { teacherId } from "@/constants/motionTransition";
 import { getLessons } from "@/api/subjects";
 import { LessonTypes } from "@/types/SubjectsTypes";
 import React, { useEffect, useState } from "react";
@@ -39,7 +39,7 @@ function TeacherHome() {
           <Announcements />
         </div>
 
-        <Lessons  />
+        <Lessons />
       </div>
       <div className="grid grid-rows-[auto_1fr] h-full overflow-hidden gap-2 mt-4">
         <YearlyCalendar year={2025} className={"w-[15rem]"} />

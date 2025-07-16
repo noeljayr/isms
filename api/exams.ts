@@ -1,4 +1,4 @@
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 import { BASE_URL } from "@/constants/BASE_URL";
 import { GetExamTypes } from "@/types/ExamTypes";
 
@@ -21,6 +21,7 @@ export const getExams = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
  
@@ -45,7 +46,7 @@ export const getExams = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 

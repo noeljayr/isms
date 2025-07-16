@@ -42,7 +42,7 @@ function Teachers() {
       setErrorMessage,
       search,
     });
-  }, [addTeacherChange]);
+  }, [addTeacherChange, search]);
 
   return (
     <>

@@ -6,7 +6,7 @@ import useClassModalStore from "@/context/modals/classes/addClass";
 import CheckCircle from "@/components/svg/CheckCircle";
 import Check from "@/components/svg/Check";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import Plus from "@/components/svg/Plus";
 import { getCookie } from "cookies-next/client";
 import { BASE_URL } from "@/constants/BASE_URL";
@@ -38,7 +38,7 @@ function AddClass() {
 
     if (token) {
       const decodedToken: TokenTypes = jwtDecode(token);
-      const schoolId = decodedToken.SchoolId;
+      const SchoolId = decodedToken.SchoolId;
       try {
         const response = await fetch(`${BASE_URL}/classes`, {
           method: "POST",
@@ -46,7 +46,7 @@ function AddClass() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ name, schoolId }),
+          body: JSON.stringify({ name, SchoolId }),
         });
 
         const data = await response.json();
@@ -70,6 +70,15 @@ function AddClass() {
       setErrorMessage("Not authorized");
     }
   };
+
+
+
+  const [enableSubclass, setEnableSubclass] = useState(false);
+  const [selectedSubclasses, setSelectedSubclasses] = useState<string[]>([]);
+  const [suggestedSubclasses, setSuggestedSubclasses] =
+    useState<string[]>(INITIAL_SUGGESTED);
+  const [newSubclass, setNewSubclass] = useState("");
+
 
   useEffect(() => {
     const addSubClasses = async () => {
@@ -121,13 +130,8 @@ function AddClass() {
       addSubClasses();
       setClassModalActive();
     }
-  }, [mainClassSuccess]);
+  }, [mainClassSuccess, token, mainClassId, selectedSubclasses, setAddClassesChange, setClassModalActive]);
 
-  const [enableSubclass, setEnableSubclass] = useState(false);
-  const [selectedSubclasses, setSelectedSubclasses] = useState<string[]>([]);
-  const [suggestedSubclasses, setSuggestedSubclasses] =
-    useState<string[]>(INITIAL_SUGGESTED);
-  const [newSubclass, setNewSubclass] = useState("");
 
   // select from suggestions
   const handleSelectSuggested = (sub: string) => {
@@ -237,7 +241,7 @@ function AddClass() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={motionTranstion}
+                      transition={motionTransition}
                       className="subclass-input flex flex-col gap-2"
                     >
                       <div className="selected-subclasses flex gap-2 flex-wrap">
@@ -316,7 +320,7 @@ function AddClass() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -334,7 +338,7 @@ function AddClass() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

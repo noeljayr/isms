@@ -7,7 +7,7 @@ import useViewGuardiansModalStore from "@/context/modals/guardians/viewGuardians
 import useViewStudentModalStore from "@/context/modals/students/viewStudents";
 import Loader from "../ux/Loader";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import { editStudent, getStudents } from "@/api/students";
 import Check from "../svg/Check";
 
@@ -103,13 +103,13 @@ function GuardianStudents({ guardianName }: { guardianName: string }) {
       exit={{ opacity: 0, x: 20 }}
       key="guardian-students-view"
       layout="position"
-      transition={motionTranstion}
+      transition={motionTransition}
       className="grid grid-cols-1 grid-rows-[40%_1fr] gap-2 h-full overflow-hidden"
     >
       <motion.div
         animate={{ height: "auto" }}
         layout
-        transition={motionTranstion}
+        transition={motionTransition}
         style={{ display: "grid" }}
         className="grid grid-rows-[auto_1fr] overflow-hidden gap-1 section"
       >
@@ -275,7 +275,7 @@ function GuardianStudents({ guardianName }: { guardianName: string }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={motionTranstion}
+              transition={motionTransition}
               style={{
                 width: "fit-content",
                 paddingLeft: "1rem",
@@ -293,7 +293,7 @@ function GuardianStudents({ guardianName }: { guardianName: string }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={motionTranstion}
+              transition={motionTransition}
               style={{
                 width: "fit-content",
                 paddingLeft: "1rem",

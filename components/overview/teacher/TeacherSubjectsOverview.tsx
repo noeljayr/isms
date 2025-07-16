@@ -4,7 +4,7 @@ import { getTeacherSubject } from "@/api/teachers";
 import { SubjectTypes } from "@/types/SubjectsTypes";
 import NumberFlow from "@number-flow/react";
 import { useEffect, useState } from "react";
-import { teacherId } from "@/constants/motionTranstion";
+import { teacherId } from "@/constants/motionTransition";
 
 function TeacherSubjectsOverview() {
   const [isLoading, setIsLoading] = useState(false);

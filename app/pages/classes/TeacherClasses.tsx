@@ -64,7 +64,7 @@ function TeacherClasses() {
       search,
       page,
     });
-  }, [addClassesChange, search]);
+  }, [addClassesChange, search, page]);
 
   return (
     <>

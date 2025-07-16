@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 useImportStudentModalStore;
 import { useImportStudentModalStore } from "@/context/modals/students/addStudent";
 import {
@@ -24,6 +24,7 @@ export const getTeachers = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = id ? `${BASE_URL}/teachers/${id}` : `${BASE_URL}/teachers`;
@@ -45,7 +46,7 @@ export const getTeachers = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -80,8 +81,9 @@ export const getTeacherSubject = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
-  if (!id) throw new Error("Id requeired");
+  // if (!id) throw new Error("Id requeired");
 
   let endpoint = `${BASE_URL}/teachers/${id}/subjects/`;
 
@@ -100,7 +102,7 @@ export const getTeacherSubject = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -143,15 +145,16 @@ export const updateTeacher = async ({
   setErrorMessage("");
   setSuccess(false);
 
-  if (!token) throw new Error("Not authorized");
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
 
-  const SchoolId = token.schoolId;
+  if (!token) throw new Error("Not authorized");
 
   const response = await fetch(`${BASE_URL}/teachers/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       id,
@@ -198,6 +201,7 @@ export const assignSubjects = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   const response = await fetch(
@@ -206,7 +210,7 @@ export const assignSubjects = async ({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         teacherId,
@@ -245,6 +249,7 @@ export const removeSubject = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   const response = await fetch(
@@ -253,7 +258,7 @@ export const removeSubject = async ({
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         teacherId,

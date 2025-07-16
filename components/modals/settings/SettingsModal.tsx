@@ -5,19 +5,24 @@ import XClose from "@/components/svg/XClose";
 import { deleteCookie, getCookie } from "cookies-next/client";
 import useSettingsModalStore from "@/context/modals/settings";
 import Logout from "@/components/svg/Logout";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import SchoolSettings from "./SchoolSettings";
 import { AnimatePresence } from "motion/react";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 import Tabs from "@/components/ui/Tabs";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 import Pen from "@/components/svg/Edit";
+import { StaffTypes } from "@/types/StaffTypes";
+import { StudentTypes } from "@/types/StudentTypes";
+import { getTeachers } from "@/api/teachers";
 
 const tabs = ["Personal Information", "School Settings"];
 
 function SettingsModal() {
+  const { role, token } = useTokenStore();
   const router = useRouter();
-  const [userRole, setUserRole] = useState("");
+  const pathname = usePathname();
   const [pReadyOnly, setPReadOnly] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -27,10 +32,17 @@ function SettingsModal() {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("••••••");
   const [passwordReadyOnly, setPasswordReadOnly] = useState(true);
+  const [teacherData, setTeacherData] = useState<StaffTypes>();
+  const [studentData, setStudentData] = useState<StudentTypes>();
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const logout = () => {
-    deleteCookie(TOKEN_COOKIE_NAME);
     router.push("/auth");
+    deleteCookie(TOKEN_COOKIE_NAME);
+    useTokenStore.getState().logout();
+    setSettingsModalActive();
   };
 
   const [activeTab, setActiveTab] = useState(tabs[0]);
@@ -38,11 +50,23 @@ function SettingsModal() {
   const { setSettingsModalActive, settingsModalActive } =
     useSettingsModalStore();
 
-  useEffect(() => {
-    if (token) {
-      setUserRole(token.role.toLowerCase());
-    }
-  }, [token, userRole]);
+  // useEffect(() => {
+
+  //     if (role === "teacher") {
+  //       getTeachers({
+  //         setData: setTeacherData,
+  //         id: token.UserId,
+  //         setIsError,
+  //         setErrorMessage,
+  //         setIsLoading,
+  //       });
+  //     }
+
+  // }, [role]);
+
+  if (pathname.startsWith("/auth")) {
+    return <></>;
+  }
 
   return (
     <>
@@ -88,7 +112,7 @@ function SettingsModal() {
               </div>
             </div>
 
-            {userRole === "admin" ? (
+            {role === "admin" ? (
               <Tabs
                 tabs={tabs}
                 activeTab={activeTab}
@@ -217,8 +241,9 @@ function SettingsModal() {
                   </div>
 
                   <div className="flex flex-col">
-                   
-                    <span className="font-medium opacity-65">Two Factor Aunthentication</span>
+                    <span className="font-medium opacity-65">
+                      Two Factor Aunthentication
+                    </span>
                     <input
                       readOnly={passwordReadyOnly}
                       value={"Disabled"}
@@ -230,7 +255,7 @@ function SettingsModal() {
               </div>
             )}
 
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               {activeTab === "School Settings" && (
                 <SchoolSettings key="settings" />
               )}

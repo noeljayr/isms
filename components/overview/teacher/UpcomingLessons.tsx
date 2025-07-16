@@ -4,7 +4,7 @@ import { getTeacherSubject } from "@/api/teachers";
 import { LessonTypes, SubjectTypes } from "@/types/SubjectsTypes";
 import NumberFlow from "@number-flow/react";
 import { useEffect, useState } from "react";
-import { teacherId } from "@/constants/motionTranstion";
+import { teacherId } from "@/constants/motionTransition";
 import { ExamTypes } from "@/types/ExamTypes";
 import { getExams } from "@/api/exams";
 import { getLessons } from "@/api/subjects";

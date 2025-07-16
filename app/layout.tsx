@@ -16,9 +16,11 @@ import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 import "@fontsource/inter/800.css";
 import "@fontsource/inter/900.css";
-import SidebarServer from "@/components/navigation/sidebar/SidebarServer";
-import UserProfile from "@/components/UserProfile";
+import Sidebar from "@/components/navigation/sidebar/Sidebar";
 import BreadCrumbs from "@/components/navigation/BreadCrumbs";
+import SettingsModal from "@/components/modals/settings/SettingsModal";
+import NextTopLoader from "nextjs-toploader";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "CodeWave ISMS",
@@ -34,14 +36,25 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="p-2">
-        <SidebarServer />
-        <div className="page p-3 pb-0 flex flex-col gap-2 w-full h-full overflow-hidden">
-          <div className="top-bar flex items-center justify-between w-full">
-            <BreadCrumbs />
-            {/* <UserProfile /> */}
+        <Suspense>
+          <NextTopLoader
+            color="#0008cc"
+            showSpinner={false}
+            height={2}
+            crawlSpeed={200}
+            easing="ease"
+          />
+          <Sidebar />
+          <SettingsModal />
+
+          <div className="page p-3 pb-0 flex flex-col gap-2 w-full h-full overflow-hidden">
+            <div className="top-bar flex items-center justify-between w-full">
+              <BreadCrumbs />
+              {/* <UserProfile /> */}
+            </div>
+            {children}
           </div>
-          {children}
-        </div>
+        </Suspense>
       </body>
     </html>
   );

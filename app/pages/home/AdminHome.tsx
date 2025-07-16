@@ -7,7 +7,7 @@ import YearlyCalendar from "@/components/events/Calendar";
 
 function AdminHome() {
   return (
-    <div className="grid grid-cols-[1fr_auto] gap-3 mt-2 pb-3 w-full h-full overflow-hidden ">
+    <div className="grid grid-cols-[1fr_auto] gap-3 pb-3 w-full h-full overflow-hidden ">
       <div className="flex flex-col gap-3 overflow-y-auto hide-scrollbar rounded-[var(--radius)]">
         <Overview />
         <div className="grid gap-3 w-full grid-cols-2">
@@ -18,7 +18,7 @@ function AdminHome() {
       </div>
 
       {/* <Events /> */}
-      <div className="grid grid-rows-[auto_1fr] h-full overflow-hidden gap-2 mt-4">
+      <div className="grid grid-rows-[auto_1fr] h-full overflow-hidden mt-4 gap-2">
         <YearlyCalendar year={2025} className={"w-[16rem]"} />
         <Events />
       </div>

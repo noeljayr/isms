@@ -6,7 +6,7 @@ import Lessons from "@/components/lessons/Lessons";
 import Announcements from "@/components/overview/teacher/Announcements";
 import TeacherExamsOverview from "@/components/overview/teacher/TeacherExamsOverview";
 import TeacherSubjectsOverview from "@/components/overview/teacher/TeacherSubjectsOverview";
-import { teacherId } from "@/constants/motionTranstion";
+import { teacherId } from "@/constants/motionTransition";
 import { getLessons } from "@/api/subjects";
 import { LessonTypes } from "@/types/SubjectsTypes";
 import React, { useEffect, useState } from "react";
@@ -38,7 +38,10 @@ function StudentHome() {
                 format={{ maximumFractionDigits: 2, minimumFractionDigits: 2 }}
               />
             </h1>
-            <span style={{height: "2rem", width: "100%"}} className="cta-2 w-full rounded-[calc(var(--radius-s)_*_0.75)] font-semibold opacity-75 flex items-center justify-center border-[1px] border-[var(--border)] font-p-3 p-1.5">
+            <span
+              style={{ height: "2rem", width: "100%" }}
+              className="cta-2 w-full rounded-[calc(var(--radius-s)_*_0.75)] font-semibold opacity-75 flex items-center justify-center border-[1px] border-[var(--border)] font-p-3 p-1.5"
+            >
               Transations
               <span className="flex h-3 w-3 opacity-50">
                 <ChevronRight />

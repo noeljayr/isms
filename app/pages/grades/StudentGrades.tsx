@@ -149,7 +149,7 @@ function StudentGrades() {
           <div className="table-body hide-scrollbar">
             <AnimatePresence>
               {activeGrades.grades.map((grade, index) => {
-                let idx = index + 1;
+                const idx = index + 1;
                 return (
                   <motion.div
                     key={idx}

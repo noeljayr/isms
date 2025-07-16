@@ -8,8 +8,7 @@ import { BASE_URL } from "@/constants/BASE_URL";
 import { jwtDecode } from "jwt-decode";
 import { TokenTypes } from "@/types/token";
 import { getCookie } from "cookies-next/client";
-import { motionTranstion } from "@/constants/motionTranstion";
-useTeacherModalStore;
+import { motionTransition } from "@/constants/motionTransition";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 import { AnimatePresence, motion } from "motion/react";
 import Loader from "@/components/ux/Loader";
@@ -74,7 +73,7 @@ function AddTeacher() {
 
     if (token) {
       const decodedToken: TokenTypes = jwtDecode(token);
-      const schoolId = decodedToken.SchoolId;
+      const SchoolId = decodedToken.SchoolId;
 
       try {
         const response = await fetch(`${BASE_URL}/teachers`, {
@@ -86,7 +85,7 @@ function AddTeacher() {
           body: JSON.stringify({
             firstName,
             lastName,
-            schoolId,
+            SchoolId,
             gender,
             email,
             classId,
@@ -274,7 +273,7 @@ function AddTeacher() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -292,7 +291,7 @@ function AddTeacher() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -301,7 +300,7 @@ function AddTeacher() {
                     }}
                     className="success mr-auto"
                   >
-                      {firstName} {lastName} been added as a teacher
+                    {firstName} {lastName} been added as a teacher
                   </motion.span>
                 )}
               </AnimatePresence>

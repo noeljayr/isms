@@ -85,7 +85,7 @@ function EnrolledStudents() {
       }
     };
     getStudents();
-  }, [studentChange]);
+  }, [studentChange, token]);
 
   return (
     <div className="grid p-2 grid-rows-[auto_1fr] rounded-[var(--radius)] border-[1px] border-[var(--border)]">

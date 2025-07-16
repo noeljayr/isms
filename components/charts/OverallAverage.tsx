@@ -93,7 +93,7 @@ function OverallAverage({
 
       <div className="w-full pt-2 flex flex-col gap-2">
         <div className="bg-[var(--background)]  border-[1px] border-[var(--border)]  p-2 font-p-3 font-semibold rounded-[var(--radius-m)] text-center">
-          <span className="opacity-75">You're ranked</span>{" "}
+          <span className="opacity-75">You{`'`}re ranked</span>{" "}
           <span className="number">
             #
             <NumberFlow value={rank} />

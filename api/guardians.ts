@@ -1,6 +1,6 @@
 import { GetGuardians, UpdateGuardian } from "@/types/GuardianTypes";
 import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 
 export const getGuardians = async ({
   setData,
@@ -16,6 +16,7 @@ export const getGuardians = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = id ? `${BASE_URL}/Guardians/${id}` : `${BASE_URL}/Guardians`;
@@ -34,7 +35,7 @@ export const getGuardians = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -75,13 +76,14 @@ export const updateGuardian = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   const response = await fetch(`${BASE_URL}/Guardians/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       id,

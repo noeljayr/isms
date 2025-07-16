@@ -10,7 +10,7 @@ import StudentGuardianView from "../students/StudentGuardianView";
 import Loader from "@/components/ux/Loader";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import { useStudentModalStore } from "@/context/modals/students/addStudent";
 import { editStudent, getStudents } from "@/api/students";
 import Trash from "@/components/svg/Trash";
@@ -405,7 +405,7 @@ function ViewStudent() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -423,7 +423,7 @@ function ViewStudent() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

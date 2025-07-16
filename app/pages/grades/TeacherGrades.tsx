@@ -5,7 +5,7 @@ import ImportGrades from "@/components/modals/grades/ImportGrades";
 import ChevronDown from "@/components/svg/ChevronDown";
 import FileDownload from "@/components/svg/FileDownload";
 import Plus from "@/components/svg/Plus";
-import { teacherId } from "@/constants/motionTranstion";
+import { teacherId } from "@/constants/motionTransition";
 import { useImportGradesModalStore } from "@/context/modals/grades/importGrades";
 import { SubjectTypes } from "@/types/SubjectsTypes";
 import { useEffect, useState } from "react";
@@ -60,12 +60,22 @@ function TeacherGrades() {
           </button>
           <button
             onClick={setImportGradesModalActive}
-            className="cta-2 mr-auto"
+            className="cta-2"
           >
             <span className="rotate-180">
               <FileDownload />
             </span>
             Import grades
+          </button>
+
+          <button
+            onClick={setImportGradesModalActive}
+            className="cta-2 mr-auto"
+          >
+            <span className="">
+              <FileDownload />
+            </span>
+            Download template
           </button>
           <div
             style={{ width: "11rem" }}

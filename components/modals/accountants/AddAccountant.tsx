@@ -7,7 +7,7 @@ import { BASE_URL } from "@/constants/BASE_URL";
 import { jwtDecode } from "jwt-decode";
 import { TokenTypes } from "@/types/token";
 import { getCookie } from "cookies-next/client";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import { useAccountantModalStore } from "@/context/modals/addAccountant";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 import { AnimatePresence, motion } from "motion/react";
@@ -39,7 +39,7 @@ function AddAccountant() {
 
     if (token) {
       const decodedToken: TokenTypes = jwtDecode(token);
-      const schoolId = decodedToken.SchoolId;
+      const SchoolId = decodedToken.SchoolId;
       try {
         const response = await fetch(`${BASE_URL}/Accountants`, {
           method: "POST",
@@ -50,7 +50,7 @@ function AddAccountant() {
           body: JSON.stringify({
             firstName,
             lastName,
-            schoolId,
+            SchoolId,
             gender,
             email,
             address,
@@ -206,7 +206,7 @@ function AddAccountant() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -224,7 +224,7 @@ function AddAccountant() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

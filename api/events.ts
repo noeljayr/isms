@@ -1,7 +1,8 @@
 "use client";
 
 import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
+
 import {
   AddEventTypes,
   DeleteEventTypes,
@@ -23,21 +24,23 @@ export const addEvent = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
+
   if (token) {
-    const schoolId = token.schoolId;
     try {
       const response = await fetch(`${BASE_URL}/Event`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title,
           description,
           fromDate,
           toDate,
-          schoolId,
+          SchoolId,
         }),
       });
 
@@ -77,6 +80,7 @@ export const getEvents = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = id ? `${BASE_URL}/Event/${id}` : `${BASE_URL}/Event`;
@@ -96,7 +100,7 @@ export const getEvents = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -128,6 +132,7 @@ export const deleteEvent = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = `${BASE_URL}/Event/${id}`;
@@ -137,7 +142,7 @@ export const deleteEvent = async ({
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 

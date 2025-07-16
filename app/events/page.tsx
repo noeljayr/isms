@@ -16,7 +16,6 @@ import { useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 function EventsPages() {
-  const [timelineHieght, setTimelineHeight] = useState(0);
   const eventlistRef = useRef<HTMLDivElement>(null);
   const { addEventChange, setEventModalActive } = useEventModalStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -31,13 +30,6 @@ function EventsPages() {
   const [search, setSearch] = useState<string>(
     searchParams.get("search") || ""
   );
-
-  useEffect(() => {
-    if (eventlistRef.current) {
-      const height = eventlistRef.current.offsetHeight;
-      setTimelineHeight(height);
-    }
-  });
 
   useEffect(() => {
     const getEvents = async () => {
@@ -74,7 +66,7 @@ function EventsPages() {
       }
     };
     getEvents();
-  }, [addEventChange]);
+  }, [addEventChange, search, token]);
 
   return (
     <>
@@ -96,10 +88,7 @@ function EventsPages() {
             ref={eventlistRef}
             className="event-list w-full grid gap-2 relative"
           >
-            <span
-              style={{ height: timelineHieght }}
-              className="timeline absolute left-0.5"
-            ></span>
+            <span className="timeline absolute left-0.5"></span>
 
             {isLoading ? (
               <div className="h-[5rem] w-[5rem] flex m-auto items-center justify-center">

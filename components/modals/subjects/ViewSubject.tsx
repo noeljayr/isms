@@ -5,11 +5,11 @@ import XClose from "../../svg/XClose";
 import Pen from "@/components/svg/Edit";
 import Loader from "@/components/ux/Loader";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
-import { getSubjects, upDateSubject } from "@/api/subjects";
+import { motionTransition } from "@/constants/motionTransition";
+import { getLessons, getSubjects, upDateSubject } from "@/api/subjects";
 import useSubjectModalStore from "@/context/modals/subjects/addSubject";
 import useViewSubjectModalStore from "@/context/modals/subjects/viewSubject";
-import { SubjectTypes } from "@/types/SubjectsTypes";
+import { LessonTypes, SubjectTypes } from "@/types/SubjectsTypes";
 import ClassPicker from "../classes/ClassPicker";
 import CheckCircle from "@/components/svg/CheckCircle";
 import { getClasses, getSubClasses } from "@/api/classes";
@@ -18,14 +18,17 @@ import { IconStarFilled } from "@tabler/icons-react";
 import Trash from "@/components/svg/Trash";
 import Tabs from "@/components/ui/Tabs";
 import Lessons from "./Lessons";
+import { useTokenStore } from "@/context/token";
+import SubjectStudents from "./SubjectStudents";
 
-const tabs = ["Details", "Lessons"];
+const adminTabs = ["Details", "Students"];
+const teachersTabs = ["Lessons"];
 
 function ViewSubject() {
   const { addSubjectChange, setAddSubjectChange } = useSubjectModalStore();
   const { viewSubjectId, viewSubjectModalActive, setViewSubjectModalActive } =
     useViewSubjectModalStore();
-
+  const [lessonsData, setLessonsData] = useState<LessonTypes[]>([]);
   const [pReadyOnly, setPReadOnly] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -39,9 +42,27 @@ function ViewSubject() {
   const [mainClassName, setMainClassName] = useState("");
   const [subClassName, setSubClassName] = useState("");
   const [showClassPicker, setShowClassPicker] = useState(false);
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [currentTabs, setCurrentTabs] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState(currentTabs[0]);
   const [classData, setClassData] = useState<ClassTypes>();
   const [subClassData, setSubClassData] = useState<SubClassTypes>();
+
+  const [userRole, setUserRole] = useState("");
+  const { role } = useTokenStore();
+
+  useEffect(() => {
+    setUserRole(role);
+  }, [role]);
+
+  useEffect(() => {
+    if (userRole.toLowerCase() === "admin") {
+      setCurrentTabs(adminTabs);
+      setActiveTab(adminTabs[0]);
+    } else {
+      setCurrentTabs(teachersTabs);
+      setActiveTab(teachersTabs[0]);
+    }
+  }, [userRole]);
 
   useEffect(() => {
     if (viewSubjectId) {
@@ -63,22 +84,30 @@ function ViewSubject() {
       setClassId(subjectData.classId);
 
       getClasses({
-        setIsLoading,
+        setIsLoading: () => {},
         id: subjectData.classId,
-        setIsError,
-        setErrorMessage,
+        setIsError: () => {},
+        setErrorMessage: () => {},
         setData: setClassData,
       });
 
       if (subjectData.subClassId) {
         getSubClasses({
-          setIsLoading,
+          setIsLoading: () => {},
           id: subjectData.subClassId,
-          setIsError,
-          setErrorMessage,
+          setIsError: () => {},
+          setErrorMessage: () => {},
           setData: setSubClassData,
         });
       }
+
+      getLessons({
+        setData: setLessonsData,
+        setIsLoading: () => {},
+        setIsError: () => {},
+        setErrorMessage,
+        subClassId: subjectData.subClassId,
+      });
     }
   }, [subjectData]);
 
@@ -130,7 +159,7 @@ function ViewSubject() {
             animate={{
               gridTemplateRows: "auto 1fr",
             }}
-            transition={motionTranstion}
+            transition={motionTransition}
             style={{ overflow: "visible" }}
             className="card-body modal-content grid gap-2"
           >
@@ -148,67 +177,65 @@ function ViewSubject() {
               key="class-container"
             >
               {subjectData && classData && subClassData && (
-                <>
+                <motion.div
+                  layout="position"
+                  key="overview"
+                  className="section relative gap-1"
+                >
+                  <span className="flex items-center gap-2 font-medium">
+                    {subjectData.name}
+
+                    {subjectData.isMandotory && (
+                      <span className="mandotory right-1 top-1 h-4 w-4 rounded-[50%] flex items-center justify-center font-bold font-p-3 bg-[rgba(255,200,1,0.1)]">
+                        <IconStarFilled
+                          style={{ height: "0.5rem", width: "0.6rem" }}
+                          color="#ffc801"
+                        />
+                      </span>
+                    )}
+                  </span>
                   <motion.div
                     layout="position"
                     key="overview"
-                    className="section relative gap-1"
+                    className="user-overview w-full justify-between flex gap-2 items-center"
                   >
-                    <span className="flex items-center gap-2 font-medium">
-                      {subjectData.name}
+                    <motion.span className="flex opacity-75">
+                      {classData.name} {subClassData.name}
+                    </motion.span>
+                    <span className="font-bold opacity-25">•</span>
 
-                      {subjectData.isMandotory && (
-                        <span className="mandotory right-1 top-1 h-4 w-4 rounded-[50%] flex items-center justify-center font-bold font-p-3 bg-[rgba(255,200,1,0.1)]">
-                          <IconStarFilled
-                            style={{ height: "0.5rem", width: "0.6rem" }}
-                            color="#ffc801"
-                          />
-                        </span>
-                      )}
+                    <span className="flex opacity-75 gap-1">
+                      <span className="number font-bold">{lessonsData.length}</span>
+                      Lessons
                     </span>
-                    <motion.div
-                      layout="position"
-                      key="overview"
-                      className="user-overview w-full justify-between flex gap-2 items-center"
-                    >
-                      <motion.span className="flex opacity-75">
-                        {classData.name} {subClassData.name}
-                      </motion.span>
-                      <span className="font-bold opacity-25">•</span>
 
-                      <span className="flex opacity-75 gap-1">
-                        <span className="number font-bold">5</span>
-                        Lessons
-                      </span>
+                    <span className="font-bold opacity-25">•</span>
 
-                      <span className="font-bold opacity-25">•</span>
-
-                      <span className="flex opacity-75 gap-1">
-                        <span className="number font-bold">7%</span>
-                        Completed
-                      </span>
-                    </motion.div>
-
-                    <div className="view-actions">
-                      <span
-                        onClick={() => setPReadOnly(!pReadyOnly)}
-                        className={`edit-action cursor-pointer ${
-                          pReadyOnly ? "" : "active-action"
-                        }`}
-                      >
-                        <Pen />
-                      </span>
-                      <span className="delete-action">
-                        <Trash />
-                      </span>
-                    </div>
+                    <span className="flex opacity-75 gap-1">
+                      <span className="number font-bold">2</span>
+                      Students
+                    </span>
                   </motion.div>
-                </>
+
+                  <div className="view-actions">
+                    <span
+                      onClick={() => setPReadOnly(!pReadyOnly)}
+                      className={`edit-action cursor-pointer ${
+                        pReadyOnly ? "" : "active-action"
+                      }`}
+                    >
+                      <Pen />
+                    </span>
+                    <span className="delete-action">
+                      <Trash />
+                    </span>
+                  </div>
+                </motion.div>
               )}
 
-              {!pReadyOnly && (
+              {userRole.toLowerCase() !== "student" && (
                 <Tabs
-                  tabs={tabs}
+                  tabs={currentTabs}
                   activeTab={activeTab}
                   setActiveTab={setActiveTab}
                 />
@@ -218,15 +245,15 @@ function ViewSubject() {
               {isError ? (
                 <div className="error">Something went wrong</div>
               ) : subjectData ? (
-                <AnimatePresence mode="wait">
-                  {activeTab === "Details" && pReadyOnly == false && (
+                <>
+                  {activeTab === "Details" && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      key="details"
+                      key="details1"
                       layout="position"
-                      transition={motionTranstion}
+                      transition={motionTransition}
                       className="flex flex-col gap-4 h-fit"
                     >
                       <div className="section gap-4 relative">
@@ -321,12 +348,14 @@ function ViewSubject() {
                     </motion.div>
                   )}
 
-                  {pReadyOnly || activeTab == "Lessons" ? (
-                    <Lessons key={"lessons"} subjectId={viewSubjectId} />
+                  {activeTab == "Lessons" ? (
+                    <Lessons key="lessons" subjectId={viewSubjectId} />
+                  ) : activeTab == "Students" ? (
+                    <SubjectStudents subclassId={subjectData.subClassId} />
                   ) : (
                     <></>
                   )}
-                </AnimatePresence>
+                </>
               ) : (
                 <div>Subject not found</div>
               )}
@@ -339,7 +368,7 @@ function ViewSubject() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -357,7 +386,7 @@ function ViewSubject() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

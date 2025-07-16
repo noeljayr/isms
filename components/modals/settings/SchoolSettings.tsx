@@ -4,13 +4,14 @@ import { getSchool } from "@/api/school";
 import { SchoolTypes } from "@/types/SchoolTypes";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 import CheckCircle from "@/components/svg/CheckCircle";
 import Pen from "@/components/svg/Edit";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import Loader from "@/components/ux/Loader";
 
 function SchoolSettings() {
+  const { token, SchoolId } = useTokenStore();
   const [pReadyOnly, setPReadOnly] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -19,7 +20,7 @@ function SchoolSettings() {
   const [errorMessage, setErrorMessage] = useState("");
   const [schoolData, setData] = useState<SchoolTypes>();
 
-  const [schoolName, setSchoolName] = useState<string>("");
+  const [SchoolName, setSchoolName] = useState<string>("");
   const [schoolType, setSchoolType] = useState<string>("");
   const [schoolCategory, setSchoolCategory] = useState<string>("");
   const [schoolLogoPath, setSchoolLogoPath] = useState<string>("");
@@ -35,25 +36,25 @@ function SchoolSettings() {
       setErrorMessage,
       setIsError,
       setIsLoading,
-      id: token.schoolId,
+      id: SchoolId,
     });
-  }, [token]);
+  }, [token, SchoolId]);
 
   useEffect(() => {
     if (!schoolData) return;
-    setSchoolName(schoolData.schoolName);
+    setSchoolName(schoolData.SchoolName);
     setContact(schoolData.contact);
     setAddress(schoolData.address);
     setGradingSystem(schoolData.gradingSystem);
     setSchoolLogoPath(schoolLogoPath);
     setSchoolCategory(schoolData.schoolCategory);
     setSchoolType(schoolData.schoolType);
-  }, [schoolData]);
+  }, [schoolData, schoolLogoPath]);
 
   useEffect(() => {
     if (pReadyOnly) {
       if (!schoolData) return;
-      setSchoolName(schoolData.schoolName);
+      setSchoolName(schoolData.SchoolName);
       setContact(schoolData.contact);
       setAddress(schoolData.address);
       setGradingSystem(schoolData.gradingSystem);
@@ -61,7 +62,7 @@ function SchoolSettings() {
       setSchoolCategory(schoolData.schoolCategory);
       setSchoolType(schoolData.schoolType);
     }
-  }, [pReadyOnly, schoolData]);
+  }, [pReadyOnly, schoolData, schoolLogoPath]);
 
   return (
     <motion.div
@@ -70,7 +71,7 @@ function SchoolSettings() {
       exit={{ opacity: 0 }}
       className="flex flex-col gap-2"
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout">
         <div
           key={"1"}
           style={{ display: "grid", rowGap: "0.75rem", columnGap: "2rem" }}
@@ -86,19 +87,19 @@ function SchoolSettings() {
           </span>
           <motion.div
             layout
-            transition={motionTranstion}
+            transition={motionTransition}
             className="flex flex-col"
           >
             <motion.span
               layout
-              transition={motionTranstion}
+              transition={motionTransition}
               className="font-medium opacity-65"
             >
               School Name
             </motion.span>
             <input
               readOnly={pReadyOnly}
-              value={schoolName}
+              value={SchoolName}
               className="number"
               type="text"
               onChange={(e) => setSchoolName(e.target.value)}
@@ -106,12 +107,12 @@ function SchoolSettings() {
           </motion.div>
           <motion.div
             layout
-            transition={motionTranstion}
+            transition={motionTransition}
             className="flex flex-col"
           >
             <motion.span
               layout
-              transition={motionTranstion}
+              transition={motionTransition}
               className="font-medium opacity-65"
             >
               Phone
@@ -127,12 +128,12 @@ function SchoolSettings() {
 
           <motion.div
             layout
-            transition={motionTranstion}
+            transition={motionTransition}
             className="flex flex-col"
           >
             <motion.span
               layout
-              transition={motionTranstion}
+              transition={motionTransition}
               className="font-medium opacity-65"
             >
               Location
@@ -148,12 +149,12 @@ function SchoolSettings() {
 
           <motion.div
             layout
-            transition={motionTranstion}
+            transition={motionTransition}
             className="flex flex-col"
           >
             <motion.span
               layout
-              transition={motionTranstion}
+              transition={motionTransition}
               className="font-medium opacity-65"
             >
               Category
@@ -216,12 +217,12 @@ function SchoolSettings() {
 
           <motion.div
             layout
-            transition={motionTranstion}
+            transition={motionTransition}
             className="flex flex-col"
           >
             <motion.span
               layout
-              transition={motionTranstion}
+              transition={motionTransition}
               className="font-medium opacity-65"
             >
               Type
@@ -284,12 +285,12 @@ function SchoolSettings() {
 
           <motion.div
             layout
-            transition={motionTranstion}
+            transition={motionTransition}
             className="flex flex-col"
           >
             <motion.span
               layout
-              transition={motionTranstion}
+              transition={motionTransition}
               className="font-medium opacity-65"
             >
               Grading System
@@ -361,7 +362,7 @@ function SchoolSettings() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={motionTranstion}
+                transition={motionTransition}
                 style={{
                   width: "fit-content",
                   paddingLeft: "1rem",
@@ -379,7 +380,7 @@ function SchoolSettings() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={motionTranstion}
+                transition={motionTransition}
                 style={{
                   width: "fit-content",
                   paddingLeft: "1rem",

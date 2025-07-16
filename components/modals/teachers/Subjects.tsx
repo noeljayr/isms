@@ -3,7 +3,8 @@
 import Loader from "@/components/ux/Loader";
 import { useEffect, useState } from "react";
 import { SubjectTypes } from "@/types/SubjectsTypes";
-import { NewSubjects, SubjectComponent } from "./NewSubjects";
+import SubjectComponent from "./SubjectComponent";
+import NewSubjects from "./NewSubjects";
 import useViewTeacherModalStore from "@/context/modals/teachers/viewTeacher";
 import {
   assignSubjects,
@@ -11,7 +12,7 @@ import {
   removeSubject,
 } from "@/api/teachers";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import { useTeacherModalStore } from "@/context/modals/teachers/addTeacher";
 
 type props = {
@@ -63,7 +64,7 @@ function Subjects({
     } else {
       setAssignedChanged(true);
     }
-  }, [selectedSubjects]);
+  }, [selectedSubjects, assignedSubjectsData.length]);
 
   const assign = () => {
     if (selectedSubjects.length < 1) return;
@@ -154,7 +155,7 @@ function Subjects({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={motionTranstion}
+                  transition={motionTransition}
                   style={{
                     width: "fit-content",
                     paddingLeft: "1rem",
@@ -172,7 +173,7 @@ function Subjects({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={motionTranstion}
+                  transition={motionTransition}
                   style={{
                     width: "fit-content",
                     paddingLeft: "1rem",

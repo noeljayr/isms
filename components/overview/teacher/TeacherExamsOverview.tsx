@@ -2,7 +2,7 @@
 
 import NumberFlow from "@number-flow/react";
 import { useEffect, useState } from "react";
-import { teacherId } from "@/constants/motionTranstion";
+import { teacherId } from "@/constants/motionTransition";
 import { ExamTypes } from "@/types/ExamTypes";
 import { getExams } from "@/api/exams";
 

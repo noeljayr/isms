@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import { useRef, useState } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
 
@@ -41,7 +41,7 @@ function Status({
       <motion.span
         key="statuses"
         layout
-        transition={motionTranstion}
+        transition={motionTransition}
         animate={{
           borderRadius: `${optionsActive ? "var(--radius-s)" : "0.75rem"}`,
         }}
@@ -58,7 +58,7 @@ function Status({
           }`}
           onClick={() => setOptionsActive(!optionsActive)}
         >
-          <motion.span layout="position" transition={motionTranstion}>
+          <motion.span layout="position" transition={motionTransition}>
             {activeStatus && activeStatus.length > 0
               ? activeStatus
               : "Deactived"}
@@ -85,7 +85,7 @@ function Status({
             ref={statusOptionsDiv}
             className="status-options flex flex-col gap-1 px-1"
             animate={{ width: "100%" }}
-            transition={motionTranstion}
+            transition={motionTransition}
           >
             {statuses.map((status, index) => (
               <motion.span
@@ -95,7 +95,7 @@ function Status({
                   setOptionsActive(false);
                 }}
                 animate={{ width: "100%" }}
-                transition={motionTranstion}
+                transition={motionTransition}
                 className={`${status.toLowerCase()}-option py-1.5 rounded-[var(--radius-s)] bg-[var(--background-2)] border-[1px] ${
                   activeStatus == status
                     ? "border-[#acacf1]"

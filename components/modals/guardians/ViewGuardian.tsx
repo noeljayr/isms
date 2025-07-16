@@ -8,7 +8,7 @@ import Loader from "@/components/ux/Loader";
 import useViewGuardiansModalStore from "@/context/modals/guardians/viewGuardians";
 import { Guardian } from "@/types/GuardianTypes";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import useGuardianModalStore from "@/context/modals/guardians/addGuardian";
 import GuardianStudents from "@/components/guardians/GuardianStudents";
 import Trash from "@/components/svg/Trash";
@@ -194,7 +194,7 @@ function ViewGuardian() {
                           exit={{ opacity: 0, x: -20 }}
                           key="details"
                           layout="position"
-                          transition={motionTranstion}
+                          transition={motionTransition}
                           className="flex flex-col gap-4 h-full overflow-y-auto"
                         >
                           <div className="section gap-2 relative">
@@ -287,7 +287,7 @@ function ViewGuardian() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          transition={motionTranstion}
+                          transition={motionTransition}
                           style={{
                             width: "fit-content",
                             paddingLeft: "1rem",
@@ -305,7 +305,7 @@ function ViewGuardian() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          transition={motionTranstion}
+                          transition={motionTransition}
                           style={{
                             width: "fit-content",
                             paddingLeft: "1rem",

@@ -1,18 +1,16 @@
 "use client";
 
 import { EventTypes } from "@/types/EventsTypes";
-import Calendar from "../svg/Calendar";
 import { formatDate } from "@/utils/formatDate";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import ChevronDown from "../svg/ChevronDown";
 import Pen from "../svg/Edit";
 import Trash from "../svg/Trash";
 import { deleteEvent } from "@/api/events";
 import useEventModalStore from "@/context/modals/addEvent";
-import { token } from "@/app/auth/token";
-
+import { useTokenStore } from "@/context/token";
 type props = {
   event: EventTypes;
   index: number;
@@ -21,23 +19,16 @@ type props = {
 function Event({ event, index }: props) {
   const [expand, setExpand] = useState(false);
   const { setAddEventChange } = useEventModalStore();
-  const [userRole, setUserRole] = useState("");
+  const { role } = useTokenStore();
 
-  useEffect(() => {
-    if (!token) return;
-    setUserRole(token.role);
-  }, [token]);
+ 
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{
-        ease: [0.25, 0.1, 0.25, 1],
-        delay: index / 10,
-        duration: 0.4,
-      }}
+      transition={motionTransition({ delay: index * 0.25 })}
       key={index}
       layout
       viewport={{ once: true }}
@@ -49,7 +40,7 @@ function Event({ event, index }: props) {
         className="absolute h-full w-full z-[2] cursor-pointer"
       ></motion.span>
 
-      {userRole.toLowerCase() === "admin" && (
+      {role.toLowerCase() === "admin" && (
         <motion.div
           layout
           className="event-actions flex gap-2 items-center absolute right-2 z-[3] bottom-2"
@@ -119,7 +110,7 @@ function Event({ event, index }: props) {
             marginTop: 0,
             marginBottom: 0,
           }}
-          transition={motionTranstion}
+          transition={motionTransition}
           layout
           className="font-p-3 opacity-85"
         >

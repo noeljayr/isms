@@ -7,7 +7,7 @@ import { useStudentModalStore } from "@/context/modals/students/addStudent";
 import CheckCircle from "@/components/svg/CheckCircle";
 import Loader from "@/components/ux/Loader";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import ClassPicker from "../classes/ClassPicker";
 import { capitalize } from "@/utils/capitalize";
 import { addStudent } from "@/api/students";
@@ -261,7 +261,7 @@ function AddStudent() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -279,7 +279,7 @@ function AddStudent() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

@@ -4,7 +4,7 @@ import {
   GetStudents,
 } from "@/types/StudentTypes";
 import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 import { generatePassword } from "@/utils/generatePassword";
 
 export const getStudents = async ({
@@ -29,6 +29,7 @@ export const getStudents = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = id ? `${BASE_URL}/students/${id}` : `${BASE_URL}/students`;
@@ -39,13 +40,14 @@ export const getStudents = async ({
     if (search) params.append("searchQuery", search);
     if (classId) params.append("classId", classId);
     if (subClassId) params.append("subClassId", subClassId);
-    if (parentId) params.append("guardianId", parentId);
+    if (parentId) params.append("parentId", parentId);
     if (gender) params.append("gender", gender);
     if (academicDateFrom) params.append("academicDateFrom", academicDateFrom);
     if (status) params.append("status", status);
     if (page) params.append("page", String(page));
     if (pageSize) params.append("pageSize", String(pageSize));
-    if (academicDateFrom) params.append("academicDateFrom", String(academicDateFrom));
+    if (academicDateFrom)
+      params.append("academicDateFrom", String(academicDateFrom));
     if (academicDateTo) params.append("academicDateTo", academicDateTo);
 
     endpoint += `?${params.toString()}`;
@@ -56,7 +58,7 @@ export const getStudents = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -100,13 +102,14 @@ export const editStudent = async ({
   setErrorMessage("");
   setSuccess(false);
 
+  const token = useTokenStore.getState().token;
   if (token) {
     try {
       const response = await fetch(`${BASE_URL}/students/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           id: id,
@@ -168,20 +171,21 @@ export const addStudent = async ({
   setErrorMessage("");
   setSuccess(false);
 
-  if (token) {
-    const schoolId = token.schoolId;
+  const token = useTokenStore.getState().token;
+  const SchoolId = useTokenStore.getState().SchoolId;
 
+  if (token) {
     try {
       const response = await fetch(`${BASE_URL}/students/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           firstName,
           lastName,
-          schoolId,
+          SchoolId,
           gender,
           email,
           classId,

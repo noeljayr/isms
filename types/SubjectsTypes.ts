@@ -3,14 +3,12 @@ import { QueryTypes } from "./QueryTypes";
 export interface SubjectTypes {
   id: string;
   name: string;
-  schoolId: string;
+  SchoolId: string;
   classId: string;
   subClassId: string;
   isMandotory: boolean;
   status: string;
 }
-
-
 
 export interface GetSubjectsTypes extends QueryTypes {
   setSubjectData: (data: any) => void;
@@ -47,11 +45,11 @@ export interface UpdateSubjectTypes extends QueryTypes {
 }
 
 export interface LessonTypes {
-  id: string,
+  id: string;
   subjectId: string;
   topic: string;
   classId: string;
-  schoolId: string;
+  SchoolId: string;
   subClassId: string;
   teacherId: string;
   term: string;
@@ -60,7 +58,7 @@ export interface LessonTypes {
   dayTime: string;
   weekNumber: 0;
   status: string;
-  createLessonDto?: string
+  createLessonDto?: string;
 }
 
 export interface GetLessonsTypes extends QueryTypes {
@@ -72,5 +70,5 @@ export interface GetLessonsTypes extends QueryTypes {
   page?: number;
   pageSize?: number;
   teacherId?: string;
-  subjectId?: string
+  subjectId?: string;
 }

@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/constants/BASE_URL";
-import { token } from "@/app/auth/token";
+import { useTokenStore } from "@/context/token";
 import { GetSchoolTypes } from "@/types/SchoolTypes";
 
 export const getSchool = async ({
@@ -13,6 +13,7 @@ export const getSchool = async ({
   setIsError(false);
   setErrorMessage("");
 
+  const token = useTokenStore.getState().token;
   if (!token) throw new Error("Not authorized");
 
   let endpoint = `${BASE_URL}/schools/${id}`;
@@ -22,7 +23,7 @@ export const getSchool = async ({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token?.value}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 

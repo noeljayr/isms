@@ -9,7 +9,7 @@ import { TokenTypes } from "@/types/token";
 import { jwtDecode } from "jwt-decode";
 import { BASE_URL } from "@/constants/BASE_URL";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import Loader from "@/components/ux/Loader";
 import { TOKEN_COOKIE_NAME } from "@/middleware";
 import { generatePassword } from "@/utils/generatePassword";
@@ -41,7 +41,7 @@ function AddGuardian() {
 
     if (token) {
       const decodedToken: TokenTypes = jwtDecode(token);
-      const schoolId = decodedToken.SchoolId;
+      const SchoolId = decodedToken.SchoolId;
       try {
         const response = await fetch(`${BASE_URL}/Guardians`, {
           method: "POST",
@@ -52,7 +52,7 @@ function AddGuardian() {
           body: JSON.stringify({
             firstName,
             lastName,
-            schoolId,
+            SchoolId,
             gender,
             email,
             classId,
@@ -212,7 +212,7 @@ function AddGuardian() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -230,7 +230,7 @@ function AddGuardian() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

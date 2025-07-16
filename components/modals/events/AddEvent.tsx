@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import XClose from "../../svg/XClose";
 import { AnimatePresence, motion } from "motion/react";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import Loader from "@/components/ux/Loader";
 import useEventModalStore from "@/context/modals/addEvent";
 import { addEvent } from "@/api/events";
@@ -118,7 +118,7 @@ function AddEvent() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -136,7 +136,7 @@ function AddEvent() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",

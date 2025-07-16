@@ -13,7 +13,7 @@ import { ClassTypes, SubClassTypes } from "@/types/ClassesTypes";
 import { AnimatePresence, motion } from "motion/react";
 import Pen from "@/components/svg/Edit";
 import Trash from "@/components/svg/Trash";
-import { motionTranstion } from "@/constants/motionTranstion";
+import { motionTransition } from "@/constants/motionTransition";
 import Loader from "@/components/ux/Loader";
 import { getStudents } from "@/api/students";
 import { getSubjects } from "@/api/subjects";
@@ -230,10 +230,10 @@ function ViewClass() {
                       Sub-classes
                     </span>
 
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="popLayout">
                       <motion.div
                         layout="position"
-                        transition={motionTranstion}
+                        transition={motionTransition}
                         className="grid grid-cols-2 gap-2"
                       >
                         {!pReadyOnly && !showInput && (
@@ -318,7 +318,7 @@ function ViewClass() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
@@ -336,7 +336,7 @@ function ViewClass() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={motionTranstion}
+                    transition={motionTransition}
                     style={{
                       width: "fit-content",
                       paddingLeft: "1rem",
